@@ -7,6 +7,7 @@ This project uses **React**, **TypeScript**, and **Vite**.
 To run this application locally:
 
 1. **Install dependencies**
+  switch to node latest version (eg. v22.17.0)
    ```sh
    npm install
    ```

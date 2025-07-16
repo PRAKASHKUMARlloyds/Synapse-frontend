@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
@@ -8,7 +7,6 @@ import CandidateTable from './pages/admin/CandidateTables';
 import './App.css';
 
 function App() {
-
 
   return (
     <BrowserRouter>

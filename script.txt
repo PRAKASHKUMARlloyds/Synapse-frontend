@@ -1,0 +1,8 @@
+AI:
+Hi I am Suman AI, how you are doing?
+Candidate:
+Hi I am Ravi, I am doing good.
+AI:
+Can you please give brief introduction about you?
+Candidate:
+I have 5+ years of experiecnce in MERN stack development.

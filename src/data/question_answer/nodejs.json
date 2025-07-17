@@ -1,0 +1,184 @@
+{
+    "nodejs_coding": [
+        {
+            "id": 1,
+            "question": "This is a sample nodejs question number 1.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 2,
+            "question": "This is a sample nodejs question number 2.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 3,
+            "question": "This is a sample nodejs question number 3.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 4,
+            "question": "This is a sample nodejs question number 4.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 5,
+            "question": "This is a sample nodejs question number 5.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 6,
+            "question": "This is a sample nodejs question number 6.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 7,
+            "question": "This is a sample nodejs question number 7.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 8,
+            "question": "This is a sample nodejs question number 8.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 9,
+            "question": "This is a sample nodejs question number 9.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 10,
+            "question": "This is a sample nodejs question number 10.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 11,
+            "question": "This is a sample nodejs question number 11.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 12,
+            "question": "This is a sample nodejs question number 12.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 13,
+            "question": "This is a sample nodejs question number 13.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 14,
+            "question": "This is a sample nodejs question number 14.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 15,
+            "question": "This is a sample nodejs question number 15.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 16,
+            "question": "This is a sample nodejs question number 16.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 17,
+            "question": "This is a sample nodejs question number 17.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 18,
+            "question": "This is a sample nodejs question number 18.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 19,
+            "question": "This is a sample nodejs question number 19.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 20,
+            "question": "This is a sample nodejs question number 20.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 21,
+            "question": "This is a sample nodejs question number 21.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 22,
+            "question": "This is a sample nodejs question number 22.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 23,
+            "question": "This is a sample nodejs question number 23.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 24,
+            "question": "This is a sample nodejs question number 24.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 25,
+            "question": "This is a sample nodejs question number 25.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 26,
+            "question": "This is a sample nodejs question number 26.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 27,
+            "question": "This is a sample nodejs question number 27.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 28,
+            "question": "This is a sample nodejs question number 28.",
+            "category": "nodejs",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 29,
+            "question": "This is a sample nodejs question number 29.",
+            "category": "nodejs",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 30,
+            "question": "This is a sample nodejs question number 30.",
+            "category": "nodejs",
+            "difficulty": "Beginner"
+        }
+    ]
+}

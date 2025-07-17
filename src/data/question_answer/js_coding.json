@@ -1,0 +1,40 @@
+{
+    "js_coding": [
+        {
+            "id": 1,
+            "question": "Write a function `reverseString(str)` that takes a string and returns the reversed version.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 2,
+            "question": "Write a function `isPrime(num)` that returns true if a number is prime, false otherwise.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 3,
+            "question": "Write a recursive function `factorial(n)` that returns the factorial of a number.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 4,
+            "question": "Write a function `flattenArray(arr)` that flattens a nested array (e.g. [1, [2, [3]]] \u2192 [1, 2, 3]).",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 5,
+            "question": "Write a function `debounce(func, delay)` that delays invoking `func` until after `delay` ms have elapsed.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 6,
+            "question": "Write a function `deepClone(obj)` that performs a deep copy of a JavaScript object.",
+            "category": "js",
+            "difficulty": "Advanced"
+        }
+    ]
+}

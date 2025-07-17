@@ -1,0 +1,184 @@
+{
+    "js_coding": [
+        {
+            "id": 1,
+            "question": "This is a sample js question number 1.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 2,
+            "question": "This is a sample js question number 2.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 3,
+            "question": "This is a sample js question number 3.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 4,
+            "question": "This is a sample js question number 4.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 5,
+            "question": "This is a sample js question number 5.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 6,
+            "question": "This is a sample js question number 6.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 7,
+            "question": "This is a sample js question number 7.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 8,
+            "question": "This is a sample js question number 8.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 9,
+            "question": "This is a sample js question number 9.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 10,
+            "question": "This is a sample js question number 10.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 11,
+            "question": "This is a sample js question number 11.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 12,
+            "question": "This is a sample js question number 12.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 13,
+            "question": "This is a sample js question number 13.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 14,
+            "question": "This is a sample js question number 14.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 15,
+            "question": "This is a sample js question number 15.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 16,
+            "question": "This is a sample js question number 16.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 17,
+            "question": "This is a sample js question number 17.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 18,
+            "question": "This is a sample js question number 18.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 19,
+            "question": "This is a sample js question number 19.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 20,
+            "question": "This is a sample js question number 20.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 21,
+            "question": "This is a sample js question number 21.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 22,
+            "question": "This is a sample js question number 22.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 23,
+            "question": "This is a sample js question number 23.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 24,
+            "question": "This is a sample js question number 24.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 25,
+            "question": "This is a sample js question number 25.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 26,
+            "question": "This is a sample js question number 26.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 27,
+            "question": "This is a sample js question number 27.",
+            "category": "js",
+            "difficulty": "Beginner"
+        },
+        {
+            "id": 28,
+            "question": "This is a sample js question number 28.",
+            "category": "js",
+            "difficulty": "Intermediate"
+        },
+        {
+            "id": 29,
+            "question": "This is a sample js question number 29.",
+            "category": "js",
+            "difficulty": "Advanced"
+        },
+        {
+            "id": 30,
+            "question": "This is a sample js question number 30.",
+            "category": "js",
+            "difficulty": "Beginner"
+        }
+    ]
+}

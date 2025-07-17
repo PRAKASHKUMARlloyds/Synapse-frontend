@@ -24,6 +24,20 @@ To run this application locally:
 
 - `npm run dev` – Start the development server
 - `npm run build` – Build the app for production
+- `npm run test` - Run all test once
+- `npm run test:watch` - Run tests in watch mode
 - `npm run preview` – Preview the production build
 - `npm run lint` – Run ESLint
+
+## Testing 
+
+Place test files next to your components or in a /tests folder.
+Test files should have one of these extensions:
+
+ ```sh
+   *.test.ts
+   *.test.tsx
+   *.spec.ts
+   *.spec.tsx
+```
 

@@ -4,9 +4,9 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store'; // Adjust the import based on your store setup
-import { setFileName } from '../redux/candidateDataSlice'; // Adjust the import based on your slice setup
 import './FileUpload.css'; // Import the CSS file
 import React from 'react';
+import { setFileName } from '../../redux/candidateDataSlice';
 
 export default function FileUpload() {
   const dispatch = useDispatch();

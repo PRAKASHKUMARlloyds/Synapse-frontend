@@ -1,0 +1,40 @@
+.editor-container {
+  display: none;
+}
+
+#editor-toggle-button {
+  float: right;
+  margin: 20px;
+}
+
+.SplitPane {
+  position: relative !important;
+}
+
+.Pane {
+  overflow: auto;
+}
+
+.Resizer {
+  background: #000;
+  opacity: 0.2;
+  z-index: 1;
+  box-sizing: border-box;
+  background-clip: padding-box;
+}
+
+.Resizer:hover {
+  transition: all 0.2s ease;
+}
+
+.Resizer.vertical {
+  width: 5px;
+  margin: 0 -2px;
+  cursor: col-resize;
+}
+
+.Resizer.horizontal {
+  height: 5px;
+  margin: -2px 0;
+  cursor: row-resize;
+}

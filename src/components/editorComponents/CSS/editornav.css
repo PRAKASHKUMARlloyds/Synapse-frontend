@@ -1,0 +1,19 @@
+#run-btn {
+  margin-left: 10px;
+}
+
+#submit-btn {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.theme-button {
+  margin-left: 5px !important;
+}
+
+/* .editornav {
+  border-bottom: solid rgba(237, 231, 231, 0.92) 2px;
+} */

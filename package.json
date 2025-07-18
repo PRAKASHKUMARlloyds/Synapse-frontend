@@ -26,8 +26,7 @@
     "react-dropzone": "^14.3.8",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.3",
-    "react-select": "^5.10.2",
-    "react-split-pane": "^0.1.92"
+    "react-select": "^5.10.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

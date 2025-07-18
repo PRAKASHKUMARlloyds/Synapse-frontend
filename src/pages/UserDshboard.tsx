@@ -1,16 +1,23 @@
-import { 
-  Button, Dialog, Page, TextAreaField, Box, Heading, Paragraph 
-} from '@constellation/core';
-import { Plus } from '@constellation/core/icons';
-
 import React, { useState } from 'react';
-import './index.css';
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  IconButton,
+  Paper
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store';
 import { setDescription, setOnBoardingDetails } from '../redux/candidateDataSlice';
 import Skills from '../components/customComponents/Skills';
 import FileUpload from '../components/fileupload/FileUpload';
-
 
 const contentArray = [
   { title: 'HR Policies', text: 'Details about HR policies and procedures.' },
@@ -23,82 +30,75 @@ export default function UserDashboard() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
-  const onBoardingDetails = useSelector(
-    (state: RootState) => state.candidateData.onBoardingDetails
-  );
+  const onBoardingDetails = useSelector((state: RootState) => state.candidateData.onBoardingDetails);
+  const fileName = useSelector((state: RootState) => state.candidateData.onBoardingDetails.fileName);
+  const description = useSelector((state: RootState) => state.candidateData.onBoardingDetails.description || '');
 
-  const fileName = useSelector(
-    (state: RootState) => state.candidateData.onBoardingDetails.fileName
-  );
-
-  const description = useSelector(
-    (state: RootState) => state.candidateData.onBoardingDetails.description || ''
-  );
-
-  const handleSkillsChange = (selectedOptions: string[]) => {
-    dispatch(
-      setOnBoardingDetails({ ...onBoardingDetails, skills: selectedOptions })
-    );
-  };
+  const handleSkillsChange = (selectedOptions: readonly string[]) => {
+  dispatch(setOnBoardingDetails({ ...onBoardingDetails, skills: [...selectedOptions] }));
+};
 
   const submitHandler = () => {
     console.log('data', onBoardingDetails, fileName, description);
   };
 
   return (
-    <Page>
-      <Box>
-        <Heading>HR Dashboard</Heading>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        🧑‍💼 HR Dashboard
+      </Typography>
+
+      <Box display="flex" flexDirection="column" gap={2} mb={4}>
         {contentArray.map((item, index) => (
-          <Box key={index} mb={2}>
-            <Heading size="md">{item.title}</Heading>
-            <Paragraph>{item.text}</Paragraph>
-          </Box>
+          <Paper key={index} elevation={2} sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              {item.title}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {item.text}
+            </Typography>
+          </Paper>
         ))}
       </Box>
 
-      <div style={{ marginTop: '10px' }}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            icon={<Plus />}
-            iconPosition="left"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Candidate Onboarding
-          </Button>
-        </div>
-      </div>
-
-      <Dialog
-        open={open}
-        title="Candidate OnBoarding"
-        onClose={() => setOpen(false)}
-        className="customDialog"
-      >
-        <div style={{ marginTop: '20px', marginBottom: '20px' }}>
-          <Skills onChange={handleSkillsChange} />
-        </div>
-
-        <TextAreaField
-          label="description"
-          name="description"
-          inputWidth="fluid"
-          value={description}
-          onChange={(event: { currentTarget: { value: string; }; }) => {
-            dispatch(setDescription(event.currentTarget.value));
-          }}
-        />
-
-        <div style={{ marginTop: '20px', marginBottom: '20px' }}>
-          <FileUpload />
-        </div>
-
-        <Button width="fluid" onClick={submitHandler}>
-          Submit
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setOpen(true)}
+        >
+          Candidate Onboarding
         </Button>
+      </Box>
+
+      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Candidate Onboarding</DialogTitle>
+        <DialogContent dividers>
+          <Box my={2}>
+           
+          </Box>
+
+          <TextField
+            label="Description"
+            name="description"
+            fullWidth
+            multiline
+            rows={4}
+            value={description}
+            onChange={(e) => dispatch(setDescription(e.target.value))}
+          />
+
+          <Box my={2}>
+            <FileUpload />
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant="contained" fullWidth onClick={submitHandler}>
+            Submit
+          </Button>
+        </DialogActions>
       </Dialog>
-    </Page>
+    </Container>
   );
 }

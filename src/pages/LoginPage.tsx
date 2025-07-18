@@ -1,14 +1,16 @@
 import React from 'react';
-import { Page } from '@constellation/core';
+import { Container, Box, Paper } from '@mui/material';
 import Login from '../components/customComponents/Login';
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
   return (
-    <div style={{ padding: '50px', backgroundColor: 'rgb(246, 243, 242)' }}>
-      <Page>
-        <Login />
-      </Page>
-    </div>
+    <Box sx={{ backgroundColor: 'rgb(246, 243, 242)', minHeight: '100vh', py: 6 }}>
+      <Container maxWidth="sm">
+        <Paper elevation={3} sx={{ padding: 4 }}>
+          <Login />
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 

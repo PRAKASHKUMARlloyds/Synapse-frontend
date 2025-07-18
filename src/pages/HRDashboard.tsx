@@ -1,5 +1,5 @@
-import { Box, Heading, Page, Paragraph } from '@constellation/core';
 import React from 'react';
+import { Container, Box, Typography, Paper, Stack } from '@mui/material';
 
 const contentArray = [
   { title: 'HR Policies', text: 'Details about HR policies and procedures.' },
@@ -10,8 +10,23 @@ const contentArray = [
 
 export default function HRDashboard() {
   return (
-    <Page>
-      <div>HRDashboard</div>
-    </Page>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+         HR Dashboard
+      </Typography>
+
+      <Stack spacing={3}>
+        {contentArray.map((item, index) => (
+          <Paper key={index} elevation={2} sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              {item.title}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {item.text}
+            </Typography>
+          </Paper>
+        ))}
+      </Stack>
+    </Container>
   );
 }

@@ -10,7 +10,8 @@ import MuiAlert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login, Role } from '../../redux/authenticationSlice';
-import { RootState } from '../../store';
+import type { RootState } from '../../store';
+
 
 const Alert = React.forwardRef(function Alert(props: any, ref: any) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -25,7 +26,7 @@ const Login: React.FC = () => {
   const [showNotification, setShowNotification] = useState(false);
 
   const storedRole = useSelector(
-    (state: RootState) => state.authentication.role
+    (state: RootState) => state.authentiction.role
   );
 
   const handleLogin = () => {

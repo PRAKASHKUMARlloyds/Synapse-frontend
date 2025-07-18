@@ -3,10 +3,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store'; // Adjust the import based on your store setup
+
 import './FileUpload.css'; // Import the CSS file
 import React from 'react';
 import { setFileName } from '../../redux/candidateDataSlice';
+import type { RootState } from '../../store';
 
 export default function FileUpload() {
   const dispatch = useDispatch();

@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
-import UserDashboard from '../../pages/UserDshboard';
+import { Route, Routes } from 'react-router-dom';
 import ManagerDashboard from '../../pages/ManagerDashboard';
-import HRDashboard from '../../pages/HRDashboard';
+
 import Dashboard from '../../pages/admin/Dashboard';
 import Candidates from '../../pages/admin/CandidateTables';
 import Schedule from '../../pages/admin/Schedule';
@@ -13,6 +10,8 @@ import ChatInterface from '../../pages/ChatInterface';
 // import CodeEditor from '../editorComponents/CodeEditor';
 import AdminLayout from '../../pages/admin/AdminLayout';
 import LoginPage from '../../pages/LoginPage';
+import UserDashboard from '../../pages/UserDashboard';
+import HRDashboard from '../../pages/HRDashboard';
 
 export const RoutesList = () => {
   return (

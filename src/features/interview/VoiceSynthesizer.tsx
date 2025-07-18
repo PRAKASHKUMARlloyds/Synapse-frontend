@@ -1,20 +1,27 @@
 import { useEffect } from "react";
 
-export function VoiceSynthesizer({ text }: { text: string }) {
+export function VoiceSynthesizer({
+  text,
+  onEnd,
+}: {
+  text: string;
+  onEnd?: () => void;
+}) {
   useEffect(() => {
     const synth = window.speechSynthesis;
-    synth.cancel(); // Stop any ongoing speech
+    const utter = new SpeechSynthesisUtterance(text);
 
-    if (text) {
-      const utter = new SpeechSynthesisUtterance(text);
-      synth.speak(utter);
-    }
-
-    // Optional: cleanup to cancel speech when component unmounts
-    return () => {
-      synth.cancel();
+    utter.onend = () => {
+      console.log('Finished speaking');
+      if (onEnd) onEnd();
     };
-  }, [text]);
 
-  return null;
+    synth.speak(utter);
+
+    return () => {
+      synth.cancel(); // cleanup if unmounted early
+    };
+  }, [text, onEnd]);
+
+  return null; // no UI
 }

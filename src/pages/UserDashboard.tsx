@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Container, Typography, Button, Box } from '@mui/material';
 import ChatInterface from './ChatInterface';
+import AiInterviewPage from './AiInterviewPage';
 
 export default function UserDashboard() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -26,6 +27,8 @@ export default function UserDashboard() {
           </Button>
         </Box>
       )}
+
+      <AiInterviewPage/>
 
       {isChatOpen && (
         <Box sx={{ mt: 4 }}>

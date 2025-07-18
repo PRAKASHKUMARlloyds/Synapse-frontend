@@ -1,0 +1,214 @@
+{
+  "nodejs": [
+    {
+      "id": 1,
+      "question": "What is Node.js?",
+      "expected_answer": "Node.js is a runtime environment that allows you to execute JavaScript outside the browser using the V8 engine.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 2,
+      "question": "How is Node.js different from JavaScript in the browser?",
+      "expected_answer": "Node.js provides server-side APIs like file system and networking, which browser JavaScript lacks.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 3,
+      "question": "What is npm?",
+      "expected_answer": "npm is Node’s package manager used to install and manage libraries and tools.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 4,
+      "question": "How do you run a Node.js file?",
+      "expected_answer": "Use the 'node' command in the terminal, followed by the filename.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 5,
+      "question": "What is the use of 'require' in Node.js?",
+      "expected_answer": "'require' is used to import modules, JSON files, or local code into a Node.js file.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 6,
+      "question": "What are modules in Node.js?",
+      "expected_answer": "Modules are reusable blocks of code, organized in separate files that export functionality.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 7,
+      "question": "What is the global object in Node.js?",
+      "expected_answer": "The global object is an object that is available in all modules and holds global variables like setTimeout.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 8,
+      "question": "What is the purpose of package.json?",
+      "expected_answer": "'package.json' holds metadata about your project and manages dependencies.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 9,
+      "question": "How do you handle file system operations in Node.js?",
+      "expected_answer": "Use the built-in 'fs' module to read, write, and manipulate files.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 10,
+      "question": "What is the role of the event loop in Node.js?",
+      "expected_answer": "The event loop enables non-blocking I/O by deferring operations via callback queues.",
+      "category": "nodejs",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 11,
+      "question": "How does asynchronous programming work in Node.js?",
+      "expected_answer": "Node.js uses callbacks, promises, and async/await to manage asynchronous code.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 12,
+      "question": "What are streams in Node.js?",
+      "expected_answer": "Streams are interfaces for working with streaming data, allowing efficient reading/writing.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 13,
+      "question": "How do you use callbacks and promises?",
+      "expected_answer": "Callbacks are functions passed to handle async results; promises offer cleaner syntax and chaining.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 14,
+      "question": "What is Express.js?",
+      "expected_answer": "Express.js is a Node.js web framework for building RESTful APIs and web applications.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 15,
+      "question": "How do you set up a basic server in Node.js?",
+      "expected_answer": "Use the 'http' module or Express to create a server and define request handlers.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 16,
+      "question": "How do you handle routing in Express?",
+      "expected_answer": "Use app.get(), app.post(), etc., to define routes that respond to HTTP requests.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 17,
+      "question": "What is middleware in Node.js?",
+      "expected_answer": "Middleware is a function that processes requests before they reach your route handlers.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 18,
+      "question": "How do you handle errors in Express?",
+      "expected_answer": "Use error-handling middleware with four parameters, or try/catch inside async functions.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 19,
+      "question": "What is process.env used for?",
+      "expected_answer": "'process.env' stores environment variables used for configuration and deployment.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 20,
+      "question": "What is a REST API and how do you build one with Node?",
+      "expected_answer": "A REST API follows HTTP methods and routes, implemented using Express and route handlers.",
+      "category": "nodejs",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 21,
+      "question": "How does the Node.js event loop work internally?",
+      "expected_answer": "It monitors the call stack and task queue to handle asynchronous operations efficiently.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 22,
+      "question": "What are worker threads?",
+      "expected_answer": "Worker threads allow parallel execution of JavaScript code for CPU-intensive tasks.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 23,
+      "question": "How do you handle clustering in Node.js?",
+      "expected_answer": "Use the 'cluster' module to fork worker processes that share server ports.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 24,
+      "question": "What is the difference between spawn and fork?",
+      "expected_answer": "'spawn' launches a new process; 'fork' creates a child process linked to parent via IPC.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 25,
+      "question": "How do you implement authentication with JWT in Node.js?",
+      "expected_answer": "Generate a token using jsonwebtoken, send it to the client, and verify it on protected routes.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 26,
+      "question": "What are some common security practices in Node.js?",
+      "expected_answer": "Use helmet, validate input, manage secrets securely, and handle errors properly.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 27,
+      "question": "How do you use MongoDB with Node.js?",
+      "expected_answer": "Install MongoDB driver or Mongoose, connect to a database, and perform CRUD operations.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 28,
+      "question": "How does caching improve performance in Node.js?",
+      "expected_answer": "Caching stores frequently accessed data in memory to reduce response time.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 29,
+      "question": "What is socket.io and how do you use it for real-time communication?",
+      "expected_answer": "Socket.io is a library for bidirectional communication between clients and server using WebSockets.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 30,
+      "question": "How does dependency injection work in Node.js?",
+      "expected_answer": "You inject dependencies via constructors or functions to decouple components and improve testability.",
+      "category": "nodejs",
+      "difficulty": "Advanced"
+    }
+  ]
+}

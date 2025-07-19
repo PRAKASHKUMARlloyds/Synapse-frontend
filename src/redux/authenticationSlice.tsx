@@ -11,16 +11,14 @@ export const Role = {
 };
 
 interface AuthenticationState {
+  email: string | null;
+  password: string | null;
   role: Role;
 }
 
-const DEFAULT_CREDENTIALS = {
-  user: { email: 'user@lloydsbanking.com', password: 'user@123' },
-  hr: { email: 'hr@lloydsbanking.com', password: 'hr@123' },
-  manager: { email: 'manager@lloydsbanking.com', password: 'manager@123' },
-};
-
 const initialState: AuthenticationState = {
+  email: null,
+  password: null,
   role: Role.None,
 };
 
@@ -30,22 +28,17 @@ const authenticationSlice = createSlice({
   reducers: {
     login: (
       state,
-      action: PayloadAction<{ email: string; password: string }>
+      action: PayloadAction<{ email: string; password: string; role: Role }>
     ) => {
-      console.log('redux');
-      const { email, password } = action.payload;
-
-      // Find role based on entered credentials
-      for (const [role, creds] of Object.entries(DEFAULT_CREDENTIALS)) {
-        if (creds.email === email && creds.password === password) {
-          state.role = role as Role;
-          return; // Exit once a match is found
-        }
-      }
-
-      state.role = Role.None; // If no match, set role to None
+      console.log('redux login');
+      const { email, password, role } = action.payload;
+      state.email = email;
+      state.password = password;
+      state.role = role;
     },
     logout: (state) => {
+      state.email = null;
+      state.password = null;
       state.role = Role.None;
     },
   },

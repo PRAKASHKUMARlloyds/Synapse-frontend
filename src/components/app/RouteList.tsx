@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { LoginPage } from '../../pages/LoginPage';
+import { Route, Routes } from 'react-router-dom';
+import ManagerDashboard from '../../pages/ManagerDashboard';
 
-import UserDashboard from 'src/pages/UserDashboard';
-import ManagerDashboard from 'src/pages/ManagerDashboard';
-import HRDashboard from 'src/pages/HRDashboard';
-import ChatInterface from 'src/pages/ChatInterface';
-import AdminLayout from 'src/pages/admin/AdminLayout';
 import Dashboard from '../../pages/admin/Dashboard';
 import Candidates from '../../pages/admin/CandidateTables';
 import Schedule from '../../pages/admin/Schedule';
 import Feedback from '../../pages/admin/Feedback';
-import CodeEditor from 'src/components/editor/CodeEditor';
+
+import ChatInterface from '../../pages/ChatInterface';
+// import CodeEditor from '../editorComponents/CodeEditor';
+import AdminLayout from '../../pages/admin/AdminLayout';
+import LoginPage from '../../pages/LoginPage';
+import UserDashboard from '../../pages/UserDashboard';
+import HRDashboard from '../../pages/HRDashboard';
 
 export const RoutesList = () => {
   return (
@@ -29,7 +29,7 @@ export const RoutesList = () => {
           <Route path="schedule" element={<Schedule />} />
           <Route path="feedback" element={<Feedback />} />
         </Route>
-        <Route path="/editor" element={<CodeEditor />} />
+        {/* <Route path="/editor" element={<CodeEditor />} /> */}
       </Routes>
     </div>
   );

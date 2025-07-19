@@ -4,15 +4,15 @@ import {
   Button,
   Snackbar,
   Box,
-  Typography,
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login, Role } from '../../redux/authenticationSlice';
-import { RootState } from '../../store';
+import type { RootState } from '../../store';
+import type { AlertProps } from '@mui/material/Alert';
 
-const Alert = React.forwardRef(function Alert(props: any, ref: any) {
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
@@ -25,11 +25,12 @@ const Login: React.FC = () => {
   const [showNotification, setShowNotification] = useState(false);
 
   const storedRole = useSelector(
-    (state: RootState) => state.authentication.role
+    (state: RootState) => state.authentiction.role
   );
 
   const handleLogin = () => {
     console.log('Role');
+    console.log(storedRole);
     dispatch(login({ email, password }));
   };
 

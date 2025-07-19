@@ -1,5 +1,6 @@
 import chroma from 'chroma-js';
-import Select, { StylesConfig } from 'react-select';
+import Select from 'react-select';
+import type { StylesConfig } from 'react-select';
 import React from 'react';
 
 export interface options {
@@ -107,12 +108,19 @@ const dark: any = {
   }),
 };
 
-export default ({
+interface SkillsProps {
+  value: readonly options[];
+  onChange: (selected: readonly options[]) => void;
+  handleSkillsDropdownOpen?: () => void;
+  handleSkillsDropdownClose?: () => void;
+}
+
+const Skills: React.FC<SkillsProps> = ({
   value,
   onChange,
   handleSkillsDropdownOpen,
   handleSkillsDropdownClose,
-}: any) => {
+}) => {
   return (
     <Select
       closeMenuOnSelect={false}
@@ -127,3 +135,5 @@ export default ({
     />
   );
 };
+
+export default Skills;

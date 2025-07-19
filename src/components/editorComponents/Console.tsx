@@ -4,7 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Container, IconButton } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import "../CSS/console.css";
+// import "../CSS/console.css";
 
 interface OutputType {
   logs: string[];

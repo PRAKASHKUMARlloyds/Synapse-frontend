@@ -1,11 +1,14 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
-export enum Role {
-  User = 'user',
-  HR = 'hr',
-  Manager = 'manager',
-  None = 'none',
-}
+export type Role = 'user' | 'hr' | 'manager' | 'none';
+
+export const Role = {
+  User: 'user' as Role,
+  HR: 'hr' as Role,
+  Manager: 'manager' as Role,
+  None: 'none' as Role,
+};
 
 interface AuthenticationState {
   role: Role;

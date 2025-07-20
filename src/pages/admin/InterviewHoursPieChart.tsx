@@ -1,95 +1,108 @@
-import * as React from 'react';
-import {Box,Typography,FormControl,InputLabel,Select,MenuItem,} from '@mui/material';
-import type { SelectChangeEvent } from '@mui/material';
+import React from 'react';
+import {
+  Box,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
+import type { SelectChangeEvent } from '@mui/material';
 
-// Interview data by year
+type InterviewSlice = {
+  id: number;
+  value: number;
+  label: string;
+  color: string;
+};
 
-const rawData =[
-  {
-    year:'2024',
-  totalInterviewHours:30637,
-  selectedhours:1762,},
+const chartDataByYear: Record<string, InterviewSlice[]> = {
+  '2023': [
+    { id: 0, value: 12000, label: 'Virtual', color: '#4caf50' },
+    { id: 1, value: 10000, label: 'In-Person', color: '#ffa726' },
+    { id: 2, value: 300, label: 'Walk-In', color: '#2e7d32' }, // ✅ green
+  ],
+  '2024': [
+    { id: 0, value: 22000, label: 'Virtual', color: '#4caf50' },
+    { id: 1, value: 15000, label: 'In-Person', color: '#ffa726' },
+    { id: 2, value: 42, label: 'Walk-In', color: '#2e7d32' }, // ✅ green
+  ],
+  '2025': [
+    { id: 0, value: 18000, label: 'Virtual', color: '#4caf50' },
+    { id: 1, value: 13000, label: 'In-Person', color: '#ffa726' },
+    { id: 2, value: 85, label: 'Walk-In', color: '#2e7d32' }, // ✅ green
+  ],
+};
 
-  {
-    year:'2025',
-    totalInterviewHours:25000,
-  selectedhours:1560,
-    
-  }
-];
+export default function InterviewMethodDonutChart() {
+  const [selectedYear, setSelectedYear] = React.useState<string>('2024');
 
-export default function DonutChartWithDropdown () { 
-  const [selectedYear, setSelectedYear] =React.useState(rawData[0].year);
-  const handleYearChange = (event: SelectChangeEvent) => { 
-  setSelectedYear(event.target.value);
+  const handleYearChange = (event: SelectChangeEvent) => {
+    setSelectedYear(event.target.value);
   };
 
-// Get data for selected year const current
-  const current= rawData.find((d) => d.year === selectedYear) ?? {
-    totalInterviewHours:0,
-    selectedhours:0,
-  };
+  const pieData = chartDataByYear[selectedYear] ?? [];
 
-const donutData = [
-  {id:0,value:current.totalInterviewHours,label:'Total Interview Hours',color:'purple',},
-  {id:1,value:current.selectedhours, label:'Selected Hours',color:'green',},
-];
+  return (
+    <Box sx={{ p: 4, backgroundColor: '#f5f9f7' }}>
+      <Typography
+        variant="h4"
+        sx={{ mb: 3, fontWeight: 'bold', color: '#007A33' }}
+      >
+        🎯 Interview Method Breakdown
+      </Typography>
 
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <Typography variant="h6" sx={{ mr: 2, fontWeight: 'bold' }}>
+          Select Year
+        </Typography>
+        <FormControl variant="standard">
+          <InputLabel id="year-select-label">Year</InputLabel>
+          <Select
+            labelId="year-select-label"
+            value={selectedYear}
+            onChange={handleYearChange}
+            sx={{ minWidth: 120 }}
+          >
+            {Object.keys(chartDataByYear).map((year) => (
+              <MenuItem key={year} value={year}>
+                {year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
 
-return (
-
-  <Box sx={{ p: 4, fontweight: 'bold' ,backgroundColor: '#f5f9f7' ,mt:-10,ml:-10}}>
-  <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: '#007A33',mt:-2}}>
-        ⏳ Interview Hours Spend
-  </Typography>
-
-  <Box sx={{ display: 'flex-center', JustifyContent: 'center', mb:-1,mt:5}}>
-      <Typography variant="h6" sx={{fontWeight:'bold' , color:'black',display:'flex',mr:2,mt:1.5,ml:4}}>Select year</Typography>
-      <FormControl sx={{minwidth: 120, justifyContent:'center'}}>
-        <InputLabel id="year-select-label">Year</InputLabel>
-        <Select labelId="year-select-label" value={selectedYear} label="Year" onChange={handleYearChange}>
-          {rawData.map((d) => (
-            <MenuItem key={d.year} value={d.year}>
-                  {d.year}
-            </MenuItem>
-          ))}
-       </Select>
-      </FormControl>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <PieChart
+          series={[
+            {
+              data: pieData,
+              innerRadius: 80,
+              outerRadius: 140,
+              paddingAngle: 3,
+              cornerRadius: 4,
+              cx: 200,
+              cy: 200,
+              startAngle: 90, 
+            },
+          ]}
+          width={400}
+          height={400}
+          slotProps={{
+            legend: {
+              position: { vertical: 'middle', horizontal: 'end' },
+              sx: {
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
+                fontSize: '0.9rem',
+              },
+            },
+          }}
+        />
+      </Box>
     </Box>
-
-  <Box sx={{ display: 'flex', justifyContent: 'center', fontweight: 'bold', fontSize:20}}>
-  <PieChart
-    series={[
-      {
-        data: donutData,
-        innerRadius: 88,
-        outerRadius: 150,
-        paddingAngle: 3,
-        cornerRadius: 4,
-        cx: 250,
-        cy: 250, 
-      },
-    ]}
-    width={450}
-    height={500}
-    slotProps={{
-      legend: {
-        position: { vertical: 'middle', horizontal: 'center' },
-          sx: {
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            fontSize: '1rem',
-            fontWeight: 10,
-      },
-    },
-  }}
-  
-  />
-
-    </Box>
-  </Box>
-);
+  );
 }
-

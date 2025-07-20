@@ -29,6 +29,15 @@ export default function AiInterviewPage() {
     stopListening,
   } = useAudioToText();
 
+  // Uncomment if you want to log the logged-in user
+  //  const loggedInUser = useSelector(
+  //     (state: RootState) => state.authentiction
+  //   );
+  
+  //   useEffect(() => {
+  //   console.log('loggedInUser:', loggedInUser);
+  //   }, [loggedInUser]);
+
   useEffect(() => {
     if (!started) return;
 
@@ -78,6 +87,7 @@ export default function AiInterviewPage() {
   return (
     <div className="p-6 max-w-2xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold">AI Interview Assistant</h1>
+
 
       {!started ? (
         <button

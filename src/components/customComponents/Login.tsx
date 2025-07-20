@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -44,7 +44,6 @@ export const Login = () => {
       return;
     }
 
-    // Use credentials.users array instead of hardcoded data
     const matchedUser = credentials.users.find(
       (user) => user.email === email && user.password === password
     );

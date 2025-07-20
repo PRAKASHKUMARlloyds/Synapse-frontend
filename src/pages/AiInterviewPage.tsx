@@ -8,6 +8,7 @@ import { useRandomQuestions } from '../hooks/useRandomQuestions';
 import reactQuestions from '../data/question_answer/react.json';
 import jsQuestions from '../data/question_answer/js.json';
 import nodejsQuestions from '../data/question_answer/nodejs.json';
+import { evaluateInterview } from '../services/evaluate';
 
 type Question = {
   id?: number;
@@ -22,6 +23,7 @@ export default function AiInterviewPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [question, setQuestion] = useState<Question | string>('');
   const [silentTimer, setSilentTimer] = useState<NodeJS.Timeout | null>(null);
+  const [interviewComplete, setInterviewComplete] = useState(false);
 
   const dispatch = useDispatch();
   const { speak } = useSpeechSynthesizer();
@@ -38,10 +40,17 @@ export default function AiInterviewPage() {
   const questions = useRandomQuestions(reactQuestions, jsQuestions, nodejsQuestions);
 
   useEffect(() => {
+  if (interviewComplete) {
+    evaluateInterview();
+  }
+}, [interviewComplete]);
+
+  useEffect(() => {
     if (!started || questions.length === 0) return;
 
     if (currentIndex >= questions.length) {
       setQuestion("Interview complete. Thank you!");
+      setInterviewComplete(true);
       return;
     }
 

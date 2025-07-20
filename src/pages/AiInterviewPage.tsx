@@ -3,21 +3,27 @@ import { useDispatch } from 'react-redux';
 import useAudioToText from '../hooks/useAudioToText';
 import { addAnswer } from '../redux/interviewSlice';
 import { useSpeechSynthesizer } from '../hooks/useSpeechSynthesizer';
+import { useRandomQuestions } from '../hooks/useRandomQuestions';
 
-const questions = [
-  "What is your greatest strength?",
-  "Describe a challenge you've faced at work and how you overcame it.",
-  "Where do you see yourself in five years?",
-];
+import reactQuestions from '../data/question_answer/react.json';
+import jsQuestions from '../data/question_answer/js.json';
+import nodejsQuestions from '../data/question_answer/nodejs.json';
+
+type Question = {
+  id?: number;
+  question: string;
+  answer?: string;
+  category: string;
+  difficulty?: string;
+};
 
 export default function AiInterviewPage() {
   const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState<Question | string>('');
   const [silentTimer, setSilentTimer] = useState<NodeJS.Timeout | null>(null);
 
   const dispatch = useDispatch();
-
   const { speak } = useSpeechSynthesizer();
 
   const {
@@ -29,17 +35,10 @@ export default function AiInterviewPage() {
     stopListening,
   } = useAudioToText();
 
-  // Uncomment if you want to log the logged-in user
-  //  const loggedInUser = useSelector(
-  //     (state: RootState) => state.authentiction
-  //   );
-  
-  //   useEffect(() => {
-  //   console.log('loggedInUser:', loggedInUser);
-  //   }, [loggedInUser]);
+  const questions = useRandomQuestions(reactQuestions, jsQuestions, nodejsQuestions);
 
   useEffect(() => {
-    if (!started) return;
+    if (!started || questions.length === 0) return;
 
     if (currentIndex >= questions.length) {
       setQuestion("Interview complete. Thank you!");
@@ -50,12 +49,14 @@ export default function AiInterviewPage() {
     setQuestion(q);
     resetTranscript();
 
-    speak(q, () => {
+    const text = typeof q === 'string' ? q : q.question;
+
+    speak(text, () => {
       console.log('TTS finished, start listening');
       startListening();
       resetSilentTimer();
     });
-  }, [started, currentIndex]);
+  }, [started, currentIndex, questions]);
 
   useEffect(() => {
     if (listening && transcript) {
@@ -74,8 +75,12 @@ export default function AiInterviewPage() {
 
   const recordAnswerAndAdvance = () => {
     stopListening();
-    if (question && transcript && question !== 'Interview complete. Thank you!') {
-      dispatch(addAnswer({ question, answer: transcript }));
+    if (
+      question &&
+      transcript &&
+      typeof question !== 'string'
+    ) {
+      dispatch(addAnswer({ question: question.question, answer: transcript }));
     }
     setCurrentIndex(prev => prev + 1);
   };
@@ -88,7 +93,6 @@ export default function AiInterviewPage() {
     <div className="p-6 max-w-2xl mx-auto space-y-6">
       <h1 className="text-2xl font-bold">AI Interview Assistant</h1>
 
-
       {!started ? (
         <button
           onClick={() => setStarted(true)}
@@ -100,10 +104,10 @@ export default function AiInterviewPage() {
         <>
           <div className="bg-gray-100 p-4 rounded shadow">
             <strong>Question:</strong>
-            <p>{question}</p>
+            <p>{typeof question === 'string' ? question : question.question}</p>
           </div>
 
-          {question && question !== 'Interview complete. Thank you!' && (
+          {question !== 'Interview complete. Thank you!' && (
             <div className="bg-white border p-3 rounded">
               <strong>Your Answer:</strong>
               <p>

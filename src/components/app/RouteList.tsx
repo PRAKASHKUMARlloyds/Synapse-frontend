@@ -7,7 +7,7 @@ import Schedule from '../../pages/admin/Schedule';
 import Feedback from '../../pages/admin/Feedback';
 
 import ChatInterface from '../../pages/ChatInterface';
-// import CodeEditor from '../editorComponents/CodeEditor';
+import CodeEditor from '../editorComponents/CodeEditor';
 import AdminLayout from '../../pages/admin/AdminLayout';
 import LoginPage from '../../pages/LoginPage';
 import UserDashboard from '../../pages/UserDashboard';
@@ -29,7 +29,7 @@ export const RoutesList = () => {
           <Route path="schedule" element={<Schedule />} />
           <Route path="feedback" element={<Feedback />} />
         </Route>
-        {/* <Route path="/editor" element={<CodeEditor />} /> */}
+        <Route path="/editor" element={<CodeEditor />} />
       </Routes>
     </div>
   );

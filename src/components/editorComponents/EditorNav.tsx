@@ -1,9 +1,10 @@
 import React from 'react';
-import { FC } from 'react';
+import type { FC } from 'react';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
+import type {SelectChangeEvent} from '@mui/material/Select';
 import Container from '@mui/material/Container';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';

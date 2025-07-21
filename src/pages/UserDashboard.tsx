@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Container, Typography, Button, Box } from '@mui/material';
 import ChatInterface from './ChatInterface';
 import AiInterviewPage from './AiInterviewPage';
+// import CodeEditor from '../components/editorComponents/CodeEditor';
 
 export default function UserDashboard() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -15,7 +16,6 @@ export default function UserDashboard() {
       <Typography variant="h4" gutterBottom>
         User Dashboard
       </Typography>
-
       {!isChatOpen && (
         <Box sx={{ mt: 2 }}>
           <Button

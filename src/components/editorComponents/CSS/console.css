@@ -1,16 +1,16 @@
 .consolecomp {
-  display: none;
-  height: 29vh;
+  display: none !important;
+  height: 29vh !important;
 }
 
 .output-display {
-  padding-left: 1vw;
-  padding-right: 1vw;
-  padding-top: 1vh;
-  padding-bottom: 1vh;
-  font-size: small;
+  padding-left: 1vw !important;
+  padding-right: 1vw !important;
+  padding-top: 1vh !important;
+  padding-bottom: 1vh !important;
+  font-size: small !important;
 }
 
 #minimize-btn {
-  float: right;
+  float: right !important;
 }

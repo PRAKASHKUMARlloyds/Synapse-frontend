@@ -1,13 +1,13 @@
 #run-btn {
-  margin-left: 10px;
+  margin-left: 10px !important;
 }
 
 #submit-btn {
-  float: right;
+  float: right !important;
 }
 
 .float-left {
-  float: left;
+  float: left !important;
 }
 
 .theme-button {

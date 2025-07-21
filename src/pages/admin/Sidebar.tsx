@@ -12,22 +12,41 @@ import {
   Divider,
   Box,
 } from '@mui/material';
-import { Dashboard, People, Feedback, Settings } from '@mui/icons-material';
+import {
+  Dashboard,
+  People,
+  Feedback,
+} from '@mui/icons-material';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+// Update the import path below if your store file is located elsewhere, e.g. '../../store' or '../../app/store'
+import type { RootState } from '../../store';
+// Update the path below to the correct location of authenticationSlice in your project
+import { Role } from '../../redux/authenticationSlice';
 
 const drawerWidth = 240;
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
-  const loggedInUser = { name: 'Prakash' }; // Replace with real user context
 
-  const menuItems = [
+  const role = useSelector((state: RootState) => state.authentiction.role);
+  const loggedInUser = useSelector((state: RootState) => state.authentiction.user);
+
+  const allMenuItems = [
     { text: 'Dashboard', icon: <Dashboard />, path: '/admin/dashboard' },
     { text: 'Schedule', icon: <People />, path: '/admin/schedule' },
     { text: 'Feedback', icon: <Feedback />, path: '/admin/feedback' },
     { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
-
   ];
+
+  const menuItems =
+    role === Role.HR
+      ? allMenuItems
+      : role === Role.Manager
+        ? allMenuItems.filter(item =>
+            ['Dashboard','Schedule', 'Feedback'].includes(item.text)
+          )
+        : [];
 
   return (
     <Drawer
@@ -46,10 +65,10 @@ const Sidebar: React.FC = () => {
       <Toolbar />
       <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
         <Avatar sx={{ bgcolor: '#fff', color: '#007A33', fontWeight: 'bold' }}>
-          {loggedInUser.name.charAt(0)}
+          {loggedInUser?.name?.charAt(0) ?? 'U'}
         </Avatar>
         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-          {loggedInUser.name}
+          {loggedInUser?.name ?? 'User'}
         </Typography>
       </Box>
 
@@ -66,13 +85,9 @@ const Sidebar: React.FC = () => {
                 color: '#fff',
                 '&.Mui-selected': {
                   backgroundColor: '#004225',
-                  '&:hover': {
-                    backgroundColor: '#005f27',
-                  },
+                  '&:hover': { backgroundColor: '#005f27' },
                 },
-                '&:hover': {
-                  backgroundColor: '#006b2e',
-                },
+                '&:hover': { backgroundColor: '#006b2e' },
               }}
             >
               <ListItemIcon sx={{ color: '#fff' }}>{icon}</ListItemIcon>

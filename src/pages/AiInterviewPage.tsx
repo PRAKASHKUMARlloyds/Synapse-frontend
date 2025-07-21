@@ -1,14 +1,4 @@
 import { useEffect, useState } from 'react';
-import {
-  Typography,
-  Button,
-  Box,
-  Paper,
-  Divider,
-  Alert,
-  Collapse,
-  CircularProgress,
-} from '@mui/material';
 import { useDispatch } from 'react-redux';
 import useAudioToText from '../hooks/useAudioToText';
 import { addAnswer } from '../redux/interviewSlice';
@@ -55,8 +45,8 @@ export default function AiInterviewPage() {
   );
 
   const smallTalks = [
-    'Hi! Good Morning. How are you today?',
-    'Are you comfortable? Shall we begin shortly?',
+    "Hi! Good Morning. How are you today?",
+    "Are you comfortable? Shall we begin shortly?"
   ];
 
   useEffect(() => {
@@ -68,35 +58,43 @@ export default function AiInterviewPage() {
   useEffect(() => {
     if (!started) return;
 
-    const startInteraction = (text: string) => {
-      setQuestion(text);
-      resetTranscript();
-      speak(text, () => {
-        startListening();
-        resetSilentTimer();
-      });
-    };
-
     if (phase === 'smalltalk') {
       if (currentIndex >= smallTalks.length) {
+        // Done with smalltalk — move to interview phase
         setPhase('interview');
         setCurrentIndex(0);
         return;
       }
-      startInteraction(smallTalks[currentIndex]);
+
+      const text = smallTalks[currentIndex];
+      setQuestion(text);
+      resetTranscript();
+
+      speak(text, () => {
+        console.log('[SmallTalk] TTS finished, start listening');
+        startListening();
+        resetSilentTimer();
+      });
     }
 
     if (phase === 'interview') {
       if (currentIndex >= interviewQuestions.length) {
-        stopListening();
+        setQuestion('Interview complete. Thank you!');
         setInterviewComplete(true);
-        setQuestion('');
         return;
       }
+
       const q = interviewQuestions[currentIndex];
       setQuestion(q);
       resetTranscript();
-      startInteraction(typeof q === 'string' ? q : q.question);
+
+      const text = typeof q === 'string' ? q : q.question;
+
+      speak(text, () => {
+        console.log('[Interview] TTS finished, start listening');
+        startListening();
+        resetSilentTimer();
+      });
     }
   }, [started, currentIndex, phase, interviewQuestions]);
 
@@ -109,6 +107,7 @@ export default function AiInterviewPage() {
   const resetSilentTimer = () => {
     if (silentTimer) clearTimeout(silentTimer);
     const timer = setTimeout(() => {
+      console.log('No answer after 10 seconds. Moving to next question…');
       recordAnswerAndAdvance();
     }, 10000);
     setSilentTimer(timer);
@@ -116,68 +115,60 @@ export default function AiInterviewPage() {
 
   const recordAnswerAndAdvance = () => {
     stopListening();
+
     if (question && transcript) {
-      if (phase === 'interview' && typeof question !== 'string') {
+      if (phase === 'smalltalk' && typeof question === 'string') {
+        console.log('[SmallTalk] Answer:', transcript);
+      } else if (phase === 'interview' && typeof question !== 'string') {
         dispatch(addAnswer({ question: question.question, answer: transcript }));
       }
     }
+
     setCurrentIndex((prev) => prev + 1);
   };
 
   if (!browserSupportsSpeechRecognition) {
     return (
-      <Alert severity="error" sx={{ mt: 4 }}>
+      <p className="text-red-600 p-4">
         Your browser doesn’t support speech recognition.
-      </Alert>
+      </p>
     );
   }
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h6" color="primary" gutterBottom>
-        🎙️ AI Interview Assistant
-      </Typography>
+    <div className="p-6 max-w-2xl mx-auto space-y-6">
+      <h1 className="text-2xl font-bold">AI Interview Assistant</h1>
 
       {!started ? (
-        <Box textAlign="center" mt={2}>
-          <Button variant="contained" color="primary" onClick={() => setStarted(true)}>
-            Start Interview
-          </Button>
-        </Box>
+        <button
+          onClick={() => setStarted(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Start Interview
+        </button>
       ) : (
         <>
-          {typeof question !== 'string' || question.trim() !== '' ? (
-            <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                {phase === 'smalltalk' ? '🗨️ Small Talk:' : '❓ Question:'}
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                {typeof question === 'string' ? question : question.question}
-              </Typography>
-            </Paper>
-          ) : null}
+          <div className="bg-gray-100 p-4 rounded shadow">
+            <strong>
+              {phase === 'smalltalk' ? 'Small Talk:' : 'Question:'}
+            </strong>
+            <p>{typeof question === 'string' ? question : question.question}</p>
+          </div>
 
-          {!interviewComplete && (
-            <Paper elevation={1} sx={{ p: 3, mb: 2 }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                Your Answer
-              </Typography>
-              <Typography variant="body2" color="text.secondary" mb={1}>
-                {transcript || (listening ? '🎧 Listening...' : 'Start speaking to answer')}
-              </Typography>
-              <Typography variant="caption">
+          {question !== 'Interview complete. Thank you!' && (
+            <div className="bg-white border p-3 rounded">
+              <strong>Your Answer:</strong>
+              <p>
+                {transcript ||
+                  (listening ? 'Listening…' : 'Start speaking to see text here.')}
+              </p>
+              <p>
                 <strong>Listening:</strong> {listening ? 'Yes' : 'No'}
-              </Typography>
-            </Paper>
-          )}
-
-          {interviewComplete && (
-            <Alert severity="success" sx={{ mt: 2 }}>
-              ✅ Interview complete. Thank you!
-            </Alert>
+              </p>
+            </div>
           )}
         </>
       )}
-    </Box>
+    </div>
   );
 }

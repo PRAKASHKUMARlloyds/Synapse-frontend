@@ -19,7 +19,9 @@
     "@monaco-editor/react": "^4.7.0",
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
+    "@mui/x-charts": "^8.9.0",
     "@reduxjs/toolkit": "^2.8.2",
+    "axios": "^1.10.0",
     "@rexxars/react-split-pane": "^1.0.0",
     "chroma-js": "^3.1.2",
     "inline-style-prefixer": "^7.0.1",
@@ -30,7 +32,8 @@
     "react-resizable-panels": "^3.0.3",
     "react-router-dom": "^7.6.3",
     "react-select": "^5.10.2",
-    "react-speech-recognition": "^4.0.1"
+    "react-speech-recognition": "^4.0.1",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

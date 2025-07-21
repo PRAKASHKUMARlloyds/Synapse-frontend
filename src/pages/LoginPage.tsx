@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Box, Paper } from '@mui/material';
-import Login from '../components/customComponents/Login';
+import {Login} from '../components/customComponents/Login';
 
 const LoginPage: React.FC = () => {
   return (

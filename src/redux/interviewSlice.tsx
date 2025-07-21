@@ -1,4 +1,3 @@
-// interviewSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
@@ -7,8 +6,15 @@ interface Answer {
   answer: string;
 }
 
+interface Evaluation {
+  score: number;
+  feedback: string;
+  status: 'pass' | 'fail';
+}
+
 interface InterviewState {
   answers: Answer[];
+  evaluation?: Evaluation;
 }
 
 const initialState: InterviewState = {
@@ -24,10 +30,14 @@ const interviewSlice = createSlice({
     },
     resetInterview(state) {
       state.answers = [];
+      state.evaluation = undefined;
+    },
+    setEvaluation(state, action: PayloadAction<Evaluation>) {
+      state.evaluation = action.payload;
     }
   },
 });
 
-export const { addAnswer, resetInterview } = interviewSlice.actions;
+export const { addAnswer, resetInterview, setEvaluation } = interviewSlice.actions;
 
 export default interviewSlice.reducer;

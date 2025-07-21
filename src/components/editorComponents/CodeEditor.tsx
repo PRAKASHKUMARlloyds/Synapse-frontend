@@ -171,6 +171,8 @@ import type { ImperativePanelHandle } from "react-resizable-panels";
 
 import EditorNav from "./EditorNav";
 import ConsoleComp from "./Console";
+import AiInterviewPage from "../../pages/AiInterviewPage";
+import UserDashboard from "../../pages/UserDashboard";
 
 interface Output {
   logs: string[];
@@ -257,13 +259,23 @@ const CodeEditor: React.FC = () => {
   
 
   return (
-    <Box sx={{ height: "100vh", width: "100vw" }}>
+    <Box sx={{ height: "100vh", width: "calc(100vw - 120px)" }}>
       <PanelGroup
         direction={window.innerWidth >= 992 ? "horizontal" : "vertical"}
       >
         {/* Left/Top Panel - Question Area */}
         <Panel defaultSize={50}>
-          <Box sx={{ p: 2 }}>
+          <Box display="flex" width="100%">
+          <Box
+            sx={{
+              width: editorFlag ? '60%' : '70%',
+              transition: 'width 0.3s ease',
+              overflow: 'auto',
+            }}
+          >
+        <UserDashboard setCode={setCodeValue} />
+      </Box>
+          <Box sx={{ p: 2, flex: 1 }}>
             <Button
               variant="contained"
               color="success"
@@ -273,6 +285,7 @@ const CodeEditor: React.FC = () => {
               {editorBtnName}
             </Button>
           </Box>
+        </Box>
         </Panel>
 
         <PanelResizeHandle style={{ background: "#ccc", width: "6px" }} />
@@ -310,7 +323,7 @@ const CodeEditor: React.FC = () => {
 
                 <PanelResizeHandle style={{ background: "#ccc", height: "6px" }} />
 
-                <Panel defaultSize={50} ref={consolePanelRef} collapsible={true} collapsedSize={0}>
+                <Panel defaultSize={50} ref={consolePanelRef} collapsible={true} collapsedSize={0} style={{ height: "100%" }}>
                   <ConsoleComp
                     output={outputVal}
                     minimize={minimize}

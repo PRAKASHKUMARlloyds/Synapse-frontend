@@ -54,6 +54,7 @@ export const Login = () => {
         email: matchedUser.email,
         password: matchedUser.password,
         role: matchedUser.role.toLowerCase() as Role,
+        name: matchedUser.name, 
       })
     );
   };
@@ -65,10 +66,10 @@ export const Login = () => {
           navigate('/user-dashboard');
           break;
         case Role.HR:
-          navigate('/hr-dashboard');
+          navigate('/admin/dashboard');
           break;
         case Role.Manager:
-          navigate('/manager-dashboard');
+          navigate('/admin/dashboard');
           break;
       }
     }
@@ -85,7 +86,7 @@ export const Login = () => {
      <div>
       <AccountCircle sx={{ fontSize: 60, color: 'primary.main' }} />
       <Typography variant="h5" sx={{ mt: 1, mb: 2 }}>
-        Candidate Login
+        Login
       </Typography>
       </div>
 

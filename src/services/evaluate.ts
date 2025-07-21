@@ -15,12 +15,19 @@ function getAnswersFromStore() {
 }
 
 function extractJSON(text: string): string {
-  const match = text.match(/\{[\s\S]*\}/);
+  const cleaned = text
+    .replace(/```json/gi, '')
+    .replace(/```/g, '')
+    .trim();
+
+  const match = cleaned.match(/\{[\s\S]*\}/);
   if (match) {
-    return match[0];
+    return match[0]; // just return the JSON string
   }
   throw new Error('No valid JSON found in response.');
 }
+
+
 
 /**
  * Format Q&A pairs into a single evaluation prompt
@@ -87,6 +94,8 @@ export async function evaluateInterview() {
       console.error('[Evaluate] No valid response from Gemini');
       return null;
     }
+
+    console.log('[Evaluate] Gemini response:', textResponse);
 
      const cleanJsonString = extractJSON(textResponse);
 

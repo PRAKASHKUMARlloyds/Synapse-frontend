@@ -20,6 +20,7 @@ type Question = {
 
 export default function AiInterviewPage() {
   const [started, setStarted] = useState(false);
+  const [phase, setPhase] = useState<'smalltalk' | 'interview'>('smalltalk');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [question, setQuestion] = useState<Question | string>('');
   const [silentTimer, setSilentTimer] = useState<NodeJS.Timeout | null>(null);
@@ -37,35 +38,65 @@ export default function AiInterviewPage() {
     stopListening,
   } = useAudioToText();
 
-  const questions = useRandomQuestions(reactQuestions, jsQuestions, nodejsQuestions);
+  const interviewQuestions = useRandomQuestions(
+    reactQuestions,
+    jsQuestions,
+    nodejsQuestions
+  );
+
+  const smallTalks = [
+    "Hi! Good Morning. How are you today?",
+    "Are you comfortable? Shall we begin shortly?"
+  ];
 
   useEffect(() => {
-  if (interviewComplete) {
-    evaluateInterview();
-  }
-}, [interviewComplete]);
+    if (interviewComplete) {
+      evaluateInterview();
+    }
+  }, [interviewComplete]);
 
   useEffect(() => {
-    if (!started || questions.length === 0) return;
+    if (!started) return;
 
-    if (currentIndex >= questions.length) {
-      setQuestion("Interview complete. Thank you!");
-      setInterviewComplete(true);
-      return;
+    if (phase === 'smalltalk') {
+      if (currentIndex >= smallTalks.length) {
+        // Done with smalltalk — move to interview phase
+        setPhase('interview');
+        setCurrentIndex(0);
+        return;
+      }
+
+      const text = smallTalks[currentIndex];
+      setQuestion(text);
+      resetTranscript();
+
+      speak(text, () => {
+        console.log('[SmallTalk] TTS finished, start listening');
+        startListening();
+        resetSilentTimer();
+      });
     }
 
-    const q = questions[currentIndex];
-    setQuestion(q);
-    resetTranscript();
+    if (phase === 'interview') {
+      if (currentIndex >= interviewQuestions.length) {
+        setQuestion('Interview complete. Thank you!');
+        setInterviewComplete(true);
+        return;
+      }
 
-    const text = typeof q === 'string' ? q : q.question;
+      const q = interviewQuestions[currentIndex];
+      setQuestion(q);
+      resetTranscript();
 
-    speak(text, () => {
-      console.log('TTS finished, start listening');
-      startListening();
-      resetSilentTimer();
-    });
-  }, [started, currentIndex, questions]);
+      const text = typeof q === 'string' ? q : q.question;
+
+      speak(text, () => {
+        console.log('[Interview] TTS finished, start listening');
+        startListening();
+        resetSilentTimer();
+      });
+    }
+  }, [started, currentIndex, phase, interviewQuestions]);
 
   useEffect(() => {
     if (listening && transcript) {
@@ -76,7 +107,7 @@ export default function AiInterviewPage() {
   const resetSilentTimer = () => {
     if (silentTimer) clearTimeout(silentTimer);
     const timer = setTimeout(() => {
-      console.log("No answer after 10 seconds. Moving to next question…");
+      console.log('No answer after 10 seconds. Moving to next question…');
       recordAnswerAndAdvance();
     }, 10000);
     setSilentTimer(timer);
@@ -84,18 +115,24 @@ export default function AiInterviewPage() {
 
   const recordAnswerAndAdvance = () => {
     stopListening();
-    if (
-      question &&
-      transcript &&
-      typeof question !== 'string'
-    ) {
-      dispatch(addAnswer({ question: question.question, answer: transcript }));
+
+    if (question && transcript) {
+      if (phase === 'smalltalk' && typeof question === 'string') {
+        console.log('[SmallTalk] Answer:', transcript);
+      } else if (phase === 'interview' && typeof question !== 'string') {
+        dispatch(addAnswer({ question: question.question, answer: transcript }));
+      }
     }
-    setCurrentIndex(prev => prev + 1);
+
+    setCurrentIndex((prev) => prev + 1);
   };
 
   if (!browserSupportsSpeechRecognition) {
-    return <p className="text-red-600 p-4">Your browser doesn’t support speech recognition.</p>;
+    return (
+      <p className="text-red-600 p-4">
+        Your browser doesn’t support speech recognition.
+      </p>
+    );
   }
 
   return (
@@ -112,7 +149,9 @@ export default function AiInterviewPage() {
       ) : (
         <>
           <div className="bg-gray-100 p-4 rounded shadow">
-            <strong>Question:</strong>
+            <strong>
+              {phase === 'smalltalk' ? 'Small Talk:' : 'Question:'}
+            </strong>
             <p>{typeof question === 'string' ? question : question.question}</p>
           </div>
 
@@ -120,7 +159,8 @@ export default function AiInterviewPage() {
             <div className="bg-white border p-3 rounded">
               <strong>Your Answer:</strong>
               <p>
-                {transcript || (listening ? 'Listening…' : 'Start speaking to see text here.')}
+                {transcript ||
+                  (listening ? 'Listening…' : 'Start speaking to see text here.')}
               </p>
               <p>
                 <strong>Listening:</strong> {listening ? 'Yes' : 'No'}

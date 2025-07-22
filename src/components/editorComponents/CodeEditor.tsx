@@ -273,7 +273,7 @@ const CodeEditor: React.FC = () => {
               overflow: 'auto',
             }}
           >
-        <UserDashboard setCode={setCodeValue} />
+        <UserDashboard />
       </Box>
           <Box sx={{ p: 2, flex: 1 }}>
             <Button

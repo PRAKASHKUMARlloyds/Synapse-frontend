@@ -1,6 +1,8 @@
 .consolecomp {
   display: none !important;
   height: 29vh !important;
+  /* overflow-y: auto !important; */
+  overflow: scroll !important;
 }
 
 .output-display {

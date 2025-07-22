@@ -1,4 +1,3 @@
-
 import { useSpeechRecognition } from 'react-speech-recognition';
 import SpeechRecognition from 'react-speech-recognition';
 interface AudioToTextHook {
@@ -19,7 +18,7 @@ const useAudioToText = (): AudioToTextHook => {
   } = useSpeechRecognition();
 
   const startListening = () => {
-    SpeechRecognition.startListening({ continuous: true });
+    SpeechRecognition.startListening({ continuous: true, language: 'en-US', interimResults: true });
   };
 
   const stopListening = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Typography,
@@ -14,50 +14,30 @@ import {
   InputAdornment
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
-type Interview = {
-  id: number;
-  candidate: string;
-  position: string;
-  date: string;
-  experience: string;
-};
+import { useSelector, useDispatch } from 'react-redux';
+import { type RootState } from '../../store';
+import { updateInterviewDate } from '../../redux/interviewScheduleSlice';
 
 const Schedule: React.FC = () => {
-  const [interviews, setInterviews] = useState<Interview[]>([]);
-  const [filtered, setFiltered] = useState<Interview[]>([]);
+  const dispatch = useDispatch();
+  const interviews = useSelector((state: RootState) => state.interviewSchedule.interviews);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filterText, setFilterText] = useState('');
 
-  useEffect(() => {
-    const data = [
-      { id: 1, candidate: 'Aakar Sharma', position: 'Software Engineer', date: '2023-08-15', experience: '1 year' },
-      { id: 2, candidate: 'Priya Verma', position: 'Product Manager', date: '2023-08-16', experience: '3 years' },
-      { id: 3, candidate: 'Rakesh Mehta', position: 'UX Designer', date: '2023-08-17', experience: '4 years' },
-      { id: 4, candidate: 'Sneha Iyer', position: 'QA Engineer', date: '2023-08-18', experience: '5 years' },
-      { id: 5, candidate: 'Karan Patel', position: 'DevOps Engineer', date: '2023-08-19', experience: '7 years' }
-    ];
-    setInterviews(data);
-    setFiltered(data);
-  }, []);
+  const filtered = useMemo(() => {
+    const lowered = filterText.toLowerCase();
+    return interviews.filter(
+      item =>
+        item.candidate.toLowerCase().includes(lowered) ||
+        item.position.toLowerCase().includes(lowered)
+    );
+  }, [interviews, filterText]);
 
   const handleChangePage = (_: unknown, newPage: number) => setPage(newPage);
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleFilter = (value: string) => {
-    setFilterText(value);
-    const lowered = value.toLowerCase();
-    setFiltered(
-      interviews.filter(
-        (item) =>
-          item.candidate.toLowerCase().includes(lowered) ||
-          item.position.toLowerCase().includes(lowered)
-      )
-    );
+  const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
     setPage(0);
   };
 
@@ -78,7 +58,7 @@ const Schedule: React.FC = () => {
       <TextField
         placeholder="Filter by candidate or position"
         value={filterText}
-        onChange={(e) => handleFilter(e.target.value)}
+        onChange={(e) => setFilterText(e.target.value)}
         fullWidth
         sx={{ mb: 3, backgroundColor: '#fff', borderRadius: 2 }}
         InputProps={{
@@ -102,7 +82,7 @@ const Schedule: React.FC = () => {
                 <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Candidate</TableCell>
                 <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Position</TableCell>
                 <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Scheduled Date</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Total Experience</TableCell>
+                <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Experience</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -132,22 +112,18 @@ const Schedule: React.FC = () => {
                           value={date}
                           size="small"
                           variant="outlined"
+                          InputLabelProps={{ shrink: true }}
                           InputProps={{
                             sx: {
                               backgroundColor: '#f8fcf9',
                               borderRadius: 1,
-                              fontSize: '0.9rem'
+                              fontSize: '0.9rem',
+                              zIndex: 1
                             }
                           }}
-                          onChange={(e) => {
-                            const updatedDate = e.target.value;
-                            setInterviews((prev) =>
-                              prev.map((item) =>
-                                item.id === id ? { ...item, date: updatedDate } : item
-                              )
-                            );
-                            handleFilter(filterText);
-                          }}
+                          onChange={(e) =>
+                            dispatch(updateInterviewDate({ id, date: e.target.value }))
+                          }
                         />
                       </TableCell>
                       <TableCell>{experience}</TableCell>

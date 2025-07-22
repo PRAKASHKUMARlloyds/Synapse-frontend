@@ -52,7 +52,7 @@ export default function HRDashboard() {
       </Typography>
 
       <Box display="flex" flexDirection="column" gap={2} mb={4}>
-        {contentArray.map((item, index) => (
+        {/* {contentArray.map((item, index) => (
           <Paper key={index} elevation={2} sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>
               {item.title}
@@ -61,7 +61,7 @@ export default function HRDashboard() {
               {item.text}
             </Typography>
           </Paper>
-        ))}
+        ))} */}
 
         {/* 🔷 Display Interview Evaluation */}
         {evaluation && (
@@ -85,7 +85,7 @@ export default function HRDashboard() {
         )}
       </Box>
 
-      <Box display="flex" justifyContent="flex-end" mb={2}>
+      {/* <Box display="flex" justifyContent="flex-end" mb={2}>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -93,7 +93,7 @@ export default function HRDashboard() {
         >
           Candidate Onboarding
         </Button>
-      </Box>
+      </Box> */}
 
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
         <DialogTitle>Candidate Onboarding</DialogTitle>

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import type { RootState } from '../../store.ts';
 import { login, Role } from '../../redux/authenticationSlice';
-import credentials from '../../data/user_credentials.json';
+import credentials from '../../data/user-credentials.json';
 import {
   getEmailValidationMessage,
   getPasswordValidationMessage,

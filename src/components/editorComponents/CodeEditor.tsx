@@ -11,12 +11,21 @@ interface Output {
   error: string;
 }
 
-const CodeEditor: React.FC = () => {
+interface CodeEditorProps {
+  onSubmit: (code: string) => void;
+}
+
+
+const CodeEditor: React.FC<CodeEditorProps> = ({ onSubmit }) => {
   const [codeValue, setCodeValue] = useState("// Start coding here");
   const [tech, setTech] = useState("javascript");
   const [theme, setTheme] = useState("vs-dark");
   const [output, setOutput] = useState<Output>({ logs: [], result: "", error: "" });
   const [consoleVisible, setConsoleVisible] = useState(false);
+
+  const handleCodeSubmit = () => {
+    onSubmit(codeValue);
+  };
 
   const handleEditorChange = (value: string | undefined) => {
     setCodeValue(value ?? "");
@@ -56,6 +65,7 @@ const CodeEditor: React.FC = () => {
               changeTech={handleTechChange}
               changeTheme={handleThemeChange}
               execute={execute}
+              onSubmit={handleCodeSubmit}
             />
             <Editor
               height="100%"

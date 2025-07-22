@@ -64,6 +64,8 @@ ${body}
 export async function evaluateInterview() {
   const answers = getAnswersFromStore();
 
+  console.log('[Evaluate] Answers to evaluate:', answers);
+
   if (answers.length === 0) {
     console.warn('[Evaluate] No answers found in store.');
     return null;

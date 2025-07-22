@@ -7,12 +7,18 @@ import {
 } from "@mui/material";
 
 import ChatInterface from "./ChatInterface";
-import AiInterviewPage from "./AiInterviewPage";
+import { AiInterviewPage } from "./AiInterviewPage";
 import CodeEditor from "../components/editorComponents/CodeEditor";
 
 export default function UserDashboard() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [submittedCode, setSubmittedCode] = useState("");
+
+   const handleCodeSubmit = (code: string) => {
+    console.log("Submitted Code:", code);
+    setSubmittedCode(code);
+  };
 
   const handleOpenChat = () => setIsChatOpen(true);
   const handleToggleEditor = () => setIsEditorOpen((prev) => !prev);
@@ -72,7 +78,7 @@ export default function UserDashboard() {
             </Box>
 
             <Box sx={{ mt: 4 }}>
-              <AiInterviewPage />
+              <AiInterviewPage submittedCode={submittedCode} />
               {isChatOpen && <ChatInterface />}
             </Box>
           </Box>
@@ -87,7 +93,7 @@ export default function UserDashboard() {
                 overflow: "auto",
               }}
             >
-              <CodeEditor />
+              <CodeEditor onSubmit={handleCodeSubmit}/>
             </Box>
           )}
         </Box>

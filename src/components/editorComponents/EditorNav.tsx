@@ -20,6 +20,7 @@ interface EditorNavProps {
   changeTech: (value: string) => void;
   changeTheme: (value: string) => void;
   execute: (code: string) => void;
+  onSubmit: () => void;
 }
 
 const EditorNav: FC<EditorNavProps> = ({
@@ -28,10 +29,12 @@ const EditorNav: FC<EditorNavProps> = ({
   theme,
   changeTech,
   changeTheme,
-  execute
+  execute,
+  onSubmit
 }) => {
-  const handleSubmit = (): void => {
-    console.log(code);
+  const handleCodeSubmit = () => {
+    console.log('Submitting code:', code);
+    onSubmit();
   };
 
   const handleSelectChange = (event: SelectChangeEvent): void => {
@@ -110,7 +113,7 @@ const EditorNav: FC<EditorNavProps> = ({
               Submit
             </Button>
           ) : (
-            <Button id="submit-btn" variant="contained" size="medium" color="error" onClick={handleSubmit}>
+            <Button id="submit-btn" variant="contained" size="medium" color="success" onClick={handleCodeSubmit}>
               Submit
             </Button>
           )}

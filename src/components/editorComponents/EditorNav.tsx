@@ -1,9 +1,10 @@
 import React from 'react';
-import { FC } from 'react';
+import type { FC } from 'react';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
+import type {SelectChangeEvent} from '@mui/material/Select';
 import Container from '@mui/material/Container';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
@@ -19,6 +20,7 @@ interface EditorNavProps {
   changeTech: (value: string) => void;
   changeTheme: (value: string) => void;
   execute: (code: string) => void;
+  onSubmit: () => void;
 }
 
 const EditorNav: FC<EditorNavProps> = ({
@@ -27,10 +29,12 @@ const EditorNav: FC<EditorNavProps> = ({
   theme,
   changeTech,
   changeTheme,
-  execute
+  execute,
+  onSubmit
 }) => {
-  const handleSubmit = (): void => {
-    console.log(code);
+  const handleCodeSubmit = () => {
+    console.log('Submitting code:', code);
+    onSubmit();
   };
 
   const handleSelectChange = (event: SelectChangeEvent): void => {
@@ -109,7 +113,7 @@ const EditorNav: FC<EditorNavProps> = ({
               Submit
             </Button>
           ) : (
-            <Button id="submit-btn" variant="contained" size="medium" color="error" onClick={handleSubmit}>
+            <Button id="submit-btn" variant="contained" size="medium" color="success" onClick={handleCodeSubmit}>
               Submit
             </Button>
           )}

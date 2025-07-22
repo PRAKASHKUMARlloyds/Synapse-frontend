@@ -8,7 +8,10 @@ import { useRandomQuestions } from '../hooks/useRandomQuestions';
 import reactQuestions from '../data/question_answer/react.json';
 import jsQuestions from '../data/question_answer/js.json';
 import nodejsQuestions from '../data/question_answer/nodejs.json';
+import jsCodingQuestions from '../data/question_answer/js_coding.json';
+
 import { evaluateInterview } from '../services/evaluate';
+import { Button } from '@mui/material';
 
 type Question = {
   id?: number;
@@ -18,12 +21,17 @@ type Question = {
   difficulty?: string;
 };
 
-export default function AiInterviewPage() {
+interface AiInterviewPageProps {
+  submittedCode: string;
+}
+
+export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({ submittedCode }) => {
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState<'smalltalk' | 'interview'>('smalltalk');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [question, setQuestion] = useState<Question | string>('');
   const [silentTimer, setSilentTimer] = useState<NodeJS.Timeout | null>(null);
+  const [codingTimer, setCodingTimer] = useState<NodeJS.Timeout | null>(null);
   const [interviewComplete, setInterviewComplete] = useState(false);
 
   const dispatch = useDispatch();
@@ -38,11 +46,16 @@ export default function AiInterviewPage() {
     stopListening,
   } = useAudioToText();
 
-  const interviewQuestions = useRandomQuestions(
+  const randomQuestions = useRandomQuestions(
     reactQuestions,
     jsQuestions,
     nodejsQuestions
   );
+
+  const interviewQuestions = [
+    ...randomQuestions,
+    jsCodingQuestions.js_coding[0] // coding question at the end
+  ];
 
   const smallTalks = [
     "Hi! Good Morning. How are you today?",
@@ -56,11 +69,23 @@ export default function AiInterviewPage() {
   }, [interviewComplete]);
 
   useEffect(() => {
+    if (
+      started &&
+      phase === 'interview' &&
+      isCodingQuestion() &&
+      submittedCode.trim()
+    ) {
+      console.log("Detected submitted code for coding question, dispatching.");
+      recordCodingAnswer(submittedCode);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submittedCode]);
+
+  useEffect(() => {
     if (!started) return;
 
     if (phase === 'smalltalk') {
       if (currentIndex >= smallTalks.length) {
-        // Done with smalltalk — move to interview phase
         setPhase('interview');
         setCurrentIndex(0);
         return;
@@ -71,7 +96,6 @@ export default function AiInterviewPage() {
       resetTranscript();
 
       speak(text, () => {
-        console.log('[SmallTalk] TTS finished, start listening');
         startListening();
         resetSilentTimer();
       });
@@ -85,18 +109,22 @@ export default function AiInterviewPage() {
       }
 
       const q = interviewQuestions[currentIndex];
+      const text = typeof q === 'string' ? q : q.question;
+
       setQuestion(q);
       resetTranscript();
 
-      const text = typeof q === 'string' ? q : q.question;
-
       speak(text, () => {
-        console.log('[Interview] TTS finished, start listening');
         startListening();
-        resetSilentTimer();
+        if (isCodingQuestion()) {
+          startCodingTimer();
+        } else {
+          resetSilentTimer();
+        }
       });
     }
-  }, [started, currentIndex, phase, interviewQuestions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [started, currentIndex, phase]);
 
   useEffect(() => {
     if (listening && transcript) {
@@ -107,24 +135,49 @@ export default function AiInterviewPage() {
   const resetSilentTimer = () => {
     if (silentTimer) clearTimeout(silentTimer);
     const timer = setTimeout(() => {
-      console.log('No answer after 10 seconds. Moving to next question…');
       recordAnswerAndAdvance();
     }, 10000);
     setSilentTimer(timer);
   };
 
+  const startCodingTimer = () => {
+    if (codingTimer) clearTimeout(codingTimer);
+    const timer = setTimeout(() => {
+      console.log('1 minute passed. Submitting whatever code is present.');
+      recordCodingAnswer(submittedCode || '');
+    }, 60000);
+    setCodingTimer(timer);
+  };
+
+  const isCodingQuestion = () => {
+    return currentIndex === interviewQuestions.length - 1;
+  };
+
   const recordAnswerAndAdvance = () => {
     stopListening();
+    if (silentTimer) clearTimeout(silentTimer);
 
-    if (question && transcript) {
-      if (phase === 'smalltalk' && typeof question === 'string') {
-        console.log('[SmallTalk] Answer:', transcript);
-      } else if (phase === 'interview' && typeof question !== 'string') {
+    if (phase === 'smalltalk' && typeof question === 'string') {
+      console.log('[SmallTalk] Answer:', transcript);
+    } else if (phase === 'interview' && typeof question !== 'string') {
+      if (isCodingQuestion()) {
+        recordCodingAnswer(submittedCode || '');
+        return;
+      } else {
         dispatch(addAnswer({ question: question.question, answer: transcript }));
       }
     }
 
-    setCurrentIndex((prev) => prev + 1);
+    setCurrentIndex(prev => prev + 1);
+  };
+
+  const recordCodingAnswer = (code: string) => {
+    if (codingTimer) clearTimeout(codingTimer);
+    const q = interviewQuestions[currentIndex];
+    if (typeof q !== 'string' && code.trim()) {
+      dispatch(addAnswer({ question: q.question, answer: code }));
+      setCurrentIndex(prev => prev + 1);
+    }
   };
 
   if (!browserSupportsSpeechRecognition) {
@@ -140,12 +193,22 @@ export default function AiInterviewPage() {
       <h1 className="text-2xl font-bold">AI Interview Assistant</h1>
 
       {!started ? (
-        <button
+        <Button
+          variant="contained"
+          sx={{
+            mr: 2,
+            background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+            color: "white",
+            fontWeight: "bold",
+            px: 3,
+            py: 1,
+            borderRadius: 2,
+            boxShadow: "0 3px 5px 2px rgba(33, 203, 243, .3)"
+          }}
           onClick={() => setStarted(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
         >
           Start Interview
-        </button>
+        </Button>
       ) : (
         <>
           <div className="bg-gray-100 p-4 rounded shadow">
@@ -156,11 +219,12 @@ export default function AiInterviewPage() {
           </div>
 
           {question !== 'Interview complete. Thank you!' && (
-            <div className="bg-white border p-3 rounded">
+            <div className="bg-white border p-3 rounded space-y-2">
               <strong>Your Answer:</strong>
               <p>
-                {transcript ||
-                  (listening ? 'Listening…' : 'Start speaking to see text here.')}
+                {isCodingQuestion()
+                  ? submittedCode || '(waiting for code submission)'
+                  : transcript || (listening ? 'Listening…' : 'Start speaking to see text here.')}
               </p>
               <p>
                 <strong>Listening:</strong> {listening ? 'Yes' : 'No'}
@@ -171,4 +235,4 @@ export default function AiInterviewPage() {
       )}
     </div>
   );
-}
+};

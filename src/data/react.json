@@ -1,0 +1,214 @@
+{
+  "react": [
+    {
+      "id": 1,
+      "question": "What is React?",
+      "expected_answer": "React is a JavaScript library for building user interfaces, particularly single-page applications.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 2,
+      "question": "What is a component in React?",
+      "expected_answer": "A component is a reusable building block in a React application that defines UI and behavior.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 3,
+      "question": "What is JSX?",
+      "expected_answer": "JSX is a syntax extension for JavaScript that resembles HTML and is used in React components.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 4,
+      "question": "What is a prop in React?",
+      "expected_answer": "Props are inputs to components that allow data to be passed from parent to child.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 5,
+      "question": "What is state in React?",
+      "expected_answer": "State is a built-in object that allows components to track and respond to changes over time.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 6,
+      "question": "How do you create a React app?",
+      "expected_answer": "Use the create-react-app CLI to scaffold a React application with sensible defaults.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 7,
+      "question": "What are functional components?",
+      "expected_answer": "Functional components are React components defined as functions, often used with hooks.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 8,
+      "question": "What are class components?",
+      "expected_answer": "Class components use ES6 classes and can manage state and lifecycle methods.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 9,
+      "question": "How do you render a component?",
+      "expected_answer": "Use JSX syntax inside ReactDOM.render or return a component from another component.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 10,
+      "question": "What is the role of the root element in React?",
+      "expected_answer": "The root element is the DOM node where the React app mounts and renders.",
+      "category": "react",
+      "difficulty": "Beginner"
+    },
+    {
+      "id": 11,
+      "question": "What is a hook in React?",
+      "expected_answer": "Hooks are functions that let you use React features like state and lifecycle in functional components.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 12,
+      "question": "What does useState do?",
+      "expected_answer": "useState declares a state variable and returns a function to update it.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 13,
+      "question": "What does useEffect do?",
+      "expected_answer": "useEffect runs side effects like data fetching or DOM updates after component rendering.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 14,
+      "question": "What is React Router?",
+      "expected_answer": "React Router is a library for handling navigation and routing in React applications.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 15,
+      "question": "How do you pass props between components?",
+      "expected_answer": "Pass props as attributes in JSX from parent to child component functions.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 16,
+      "question": "How does conditional rendering work in React?",
+      "expected_answer": "Use JavaScript conditional expressions inside JSX to control what gets rendered.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 17,
+      "question": "What are controlled vs uncontrolled components?",
+      "expected_answer": "Controlled components bind input value to state; uncontrolled components use refs.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 18,
+      "question": "How do you handle forms in React?",
+      "expected_answer": "Use state to manage input fields and onChange events to capture user input.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 19,
+      "question": "What is lifting state up?",
+      "expected_answer": "Move shared state to the closest common ancestor to synchronize child components.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 20,
+      "question": "What is the useContext hook?",
+      "expected_answer": "useContext allows you to access context values directly in functional components.",
+      "category": "react",
+      "difficulty": "Intermediate"
+    },
+    {
+      "id": 21,
+      "question": "What is the virtual DOM?",
+      "expected_answer": "The virtual DOM is a lightweight copy of the actual DOM used for efficient updates.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 22,
+      "question": "How does React's reconciliation algorithm work?",
+      "expected_answer": "It compares old and new virtual DOM trees to compute the minimal set of changes.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 23,
+      "question": "What is memoization in React?",
+      "expected_answer": "Memoization avoids unnecessary re-renders by caching component results.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 24,
+      "question": "How do you optimize React performance?",
+      "expected_answer": "Use memo, lazy loading, code splitting, and avoid redundant renders.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 25,
+      "question": "What are render props?",
+      "expected_answer": "Render props are functions passed as props that return UI elements.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 26,
+      "question": "What is higher-order component (HOC)?",
+      "expected_answer": "An HOC is a function that takes a component and returns an enhanced version of it.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 27,
+      "question": "What are custom hooks?",
+      "expected_answer": "Custom hooks are user-defined functions that reuse hook logic across components.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 28,
+      "question": "How does React handle asynchronous rendering?",
+      "expected_answer": "React batches updates and uses concurrent mode to allow non-blocking rendering.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 29,
+      "question": "What is server-side rendering (SSR) in React?",
+      "expected_answer": "SSR renders components to HTML on the server before sending to the browser.",
+      "category": "react",
+      "difficulty": "Advanced"
+    },
+    {
+      "id": 30,
+      "question": "What is code splitting in React?",
+      "expected_answer": "Code splitting loads JavaScript bundles on demand to improve performance.",
+      "category": "react",
+      "difficulty": "Advanced"
+    }
+  ]
+}

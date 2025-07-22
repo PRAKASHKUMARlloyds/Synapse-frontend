@@ -12,7 +12,7 @@ export function useRandomQuestions(
   reactQuestions: Question[],
   jsQuestions: Question[],
   nodejsQuestions: Question[],
-  count = 5
+  count = 1
 ) {
   const [questions, setQuestions] = useState<Question[]>([]);
 

@@ -3,84 +3,20 @@
     {
       "id": 1,
       "question": "Write a function `reverseString(str)` that takes a string and returns the reversed version.",
-      "category": "js",
+      "category": "coding",
       "difficulty": "Beginner",
       "testCases": [
-        { "input": "\"hello\"", "output": "\"olleh\"" },
-        { "input": "\"racecar\"", "output": "\"racecar\"" },
-        { "input": "\"JavaScript\"", "output": "\"tpircSavaJ\"" }
-      ]
-    },
-    {
-      "id": 2,
-      "question": "Write a function `isPrime(num)` that returns true if a number is prime, false otherwise.",
-      "category": "js",
-      "difficulty": "Beginner",
-      "testCases": [
-        { "input": "2", "output": "true" },
-        { "input": "15", "output": "false" },
-        { "input": "17", "output": "true" }
-      ]
-    },
-    {
-      "id": 3,
-      "question": "Write a recursive function `factorial(n)` that returns the factorial of a number.",
-      "category": "js",
-      "difficulty": "Intermediate",
-      "testCases": [
-        { "input": "0", "output": "1" },
-        { "input": "4", "output": "24" },
-        { "input": "6", "output": "720" }
-      ]
-    },
-    {
-      "id": 4,
-      "question": "Write a function `flattenArray(arr)` that flattens a nested array (e.g. [1, [2, [3]]] → [1, 2, 3]).",
-      "category": "js",
-      "difficulty": "Intermediate",
-      "testCases": [
-        { "input": "[1, [2, [3, 4]], 5]", "output": "[1, 2, 3, 4, 5]" },
-        { "input": "[[1], 2, [3, [4]]]", "output": "[1, 2, 3, 4]" },
-        { "input": "[1, [2, [3, [4, [5]]]]]", "output": "[1, 2, 3, 4, 5]" }
-      ]
-    },
-    {
-      "id": 5,
-      "question": "Write a function `debounce(func, delay)` that delays invoking `func` until after `delay` ms have elapsed.",
-      "category": "js",
-      "difficulty": "Advanced",
-      "testCases": [
         {
-          "input": "debounce(() => console.log('Call 1'), 300)",
-          "output": "Should print 'Call 1' only once after 300ms of last trigger"
+          "input": "\"hello\"",
+          "output": "\"olleh\""
         },
         {
-          "input": "debounce(() => alert('Debounced!'), 500)",
-          "output": "Should alert once after 500ms pause"
+          "input": "\"racecar\"",
+          "output": "\"racecar\""
         },
         {
-          "input": "debounce(() => fetch('/api'), 1000)",
-          "output": "Should call fetch once after 1s of inactivity"
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "question": "Write a function `deepClone(obj)` that performs a deep copy of a JavaScript object.",
-      "category": "js",
-      "difficulty": "Advanced",
-      "testCases": [
-        {
-          "input": "{ a: 1, b: { c: 2 } }",
-          "output": "{ a: 1, b: { c: 2 } }"
-        },
-        {
-          "input": "[1, { a: 2 }, [3]]",
-          "output": "[1, { a: 2 }, [3]]"
-        },
-        {
-          "input": "{ x: [1, 2], y: { z: { k: 3 } } }",
-          "output": "{ x: [1, 2], y: { z: { k: 3 } } }"
+          "input": "\"JavaScript\"",
+          "output": "\"tpircSavaJ\""
         }
       ]
     }

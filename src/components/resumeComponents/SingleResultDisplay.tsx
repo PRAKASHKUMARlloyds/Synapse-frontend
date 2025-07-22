@@ -1,12 +1,12 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { SpeedometerMeter } from './GaugeMeter';
 
-interface Props {
+interface TechStack {
   result: any;
   selectedStacks: string[];
 }
 
-export const SingleResultDisplay = ({ result, selectedStacks }: Props) => (
+export const SingleResultDisplay = ({ result, selectedStacks }: TechStack) => (
   <Box mt={4}>
     <SpeedometerMeter relevance={result.relevance} />
 
@@ -15,7 +15,7 @@ export const SingleResultDisplay = ({ result, selectedStacks }: Props) => (
     </Typography>
 
     <Stack spacing={2}>
-      {selectedStacks.map(stack => {
+      {selectedStacks.map((stack) => {
         const data = result.details?.find((d: any) => d.name === stack);
         if (!data) return null;
         const stars = '⭐️'.repeat(data.proficiency);

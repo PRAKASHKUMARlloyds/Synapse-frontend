@@ -1,11 +1,11 @@
 import { Button, Stack } from '@mui/material';
 
-interface Props {
+interface UploadModeTabProps {
   activeTab: 'single' | 'bulk';
   setActiveTab: (mode: 'single' | 'bulk') => void;
 }
 
-export const UploadModeTab = ({ activeTab, setActiveTab }: Props) => (
+export const UploadModeTab = ({ activeTab, setActiveTab }: UploadModeTabProps) => (
   <Stack direction="row" spacing={2}>
     <Button
       variant={activeTab === 'single' ? 'contained' : 'outlined'}

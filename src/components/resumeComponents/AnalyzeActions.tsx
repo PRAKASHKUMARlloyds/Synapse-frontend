@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 
-interface Props {
+interface AnalyzeActionsProps {
   canAnalyze: boolean;
   errorMessage: string;
   onAnalyze: () => void;
@@ -12,7 +12,7 @@ export const AnalyzeActions = ({
   errorMessage,
   onAnalyze,
   activeTab,
-}: Props) => (
+}: AnalyzeActionsProps) =>
   canAnalyze && (
     <Box mt={2}>
       <Button variant="contained" onClick={onAnalyze}>
@@ -24,5 +24,4 @@ export const AnalyzeActions = ({
         </Typography>
       )}
     </Box>
-  )
-);
+  );

@@ -123,6 +123,17 @@ export default function UserDashboard() {
               background: '#000',
             }}
           >
+             <img src="/alex_v2_idle_image.png"
+              alt="Logo" 
+              width={400} 
+              height={400}  
+               style={{
+                borderRadius: 4,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}/>
+
             <video
               ref={streamVideoRef}
               width={400}

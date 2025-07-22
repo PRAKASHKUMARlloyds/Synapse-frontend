@@ -31,7 +31,6 @@ export const RoutesList = () => {
           <Route path="schedule" element={<Schedule />} />
           <Route path="feedback" element={<Feedback />} />
         </Route>
-        <Route path="/editor" element={<CodeEditor />} />
       </Routes>
     </div>
   );

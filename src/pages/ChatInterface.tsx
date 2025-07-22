@@ -41,7 +41,6 @@ const ChatInterface: React.FC = () => {
 
   const answers = useSelector((state: RootState) => state.interview.answers);
 
-
   return (
     <div style={styles.chatContainer}>
       {answers.map((message, index) => (

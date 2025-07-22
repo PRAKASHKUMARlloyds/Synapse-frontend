@@ -13,6 +13,7 @@ interface Evaluation {
 }
 
 interface InterviewState {
+  candidateEmail?: string;
   answers: Answer[];
   evaluation?: Evaluation;
 }
@@ -34,10 +35,13 @@ const interviewSlice = createSlice({
     },
     setEvaluation(state, action: PayloadAction<Evaluation>) {
       state.evaluation = action.payload;
-    }
+    },
+    setCandidateEmail(state, action: PayloadAction<string>) {
+      state.candidateEmail = action.payload;
+    },
   },
 });
 
-export const { addAnswer, resetInterview, setEvaluation } = interviewSlice.actions;
+export const { addAnswer, resetInterview, setEvaluation, setCandidateEmail } = interviewSlice.actions;
 
 export default interviewSlice.reducer;

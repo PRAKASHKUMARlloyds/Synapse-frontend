@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useAudioToText from '../hooks/useAudioToText';
-import { addAnswer } from '../redux/interviewSlice';
+import { addAnswer, setCandidateEmail } from '../redux/interviewSlice';
 import { useSpeechSynthesizer } from '../hooks/useSpeechSynthesizer';
 import { useRandomQuestions } from '../hooks/useRandomQuestions';
 
@@ -36,6 +36,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({ submittedCode 
 
   const dispatch = useDispatch();
   const { speak } = useSpeechSynthesizer();
+  const userEmail = useSelector((state: any) => state.authentiction.user?.email);
 
   const {
     transcript,
@@ -64,9 +65,10 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({ submittedCode 
 
   useEffect(() => {
     if (interviewComplete) {
+      dispatch(setCandidateEmail(userEmail));
       evaluateInterview();
     }
-  }, [interviewComplete]);
+  }, [dispatch, interviewComplete, userEmail]);
 
   useEffect(() => {
     if (

@@ -1,10 +1,12 @@
-import axios from 'axios';
 import type { RootState } from '../store';
+import axios from 'axios';
 import store from '../store';
 import { setEvaluation } from '../redux/interviewSlice';
+import { sendEvaluationToBackend } from './save-results';
+import { PASS_SCORE, ALERT_SUCCESS} from '../constants';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // or hardcode for testing
-const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
+const GEMINI_ENDPOINT = import.meta.env.VITE_GEMINI_ENDPOINT;
 
 /**
  * Get the answers from the Redux store
@@ -105,14 +107,28 @@ export async function evaluateInterview() {
 
     const result = {
       ...parsed,
-      status: parsed.score >= 80 ? 'pass' : 'fail'
+      status: parsed.score >= PASS_SCORE ? 'pass' : 'fail'
     };
-
-    localStorage.setItem('ai_interview_result', JSON.stringify(result));
 
     console.log('[Evaluation Result]', result);
 
     store.dispatch(setEvaluation(result));
+
+     try {
+      const backendResponse = await sendEvaluationToBackend({
+        email: store.getState().interview.candidateEmail ,
+        score: result.score,
+        feedback: result.feedback,
+        status: result.status,
+      });
+      console.log('✅ Evaluation submitted successfully:', backendResponse);
+      alert('Evaluation submitted successfully!');
+    } catch (err) {
+      console.error('❌ Failed to submit evaluation:', err);
+      alert('Failed to submit evaluation.');
+    }
+
+    alert(ALERT_SUCCESS);
 
     return result;
   } catch (err) {

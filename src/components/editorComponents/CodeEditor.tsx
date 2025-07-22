@@ -328,6 +328,7 @@ const CodeEditor: React.FC = () => {
                     output={outputVal}
                     minimize={minimize}
                     changeMinimize={setMinimize}
+                    consolePanelRef={consolePanelRef}
                   />
                 </Panel>
               </PanelGroup>

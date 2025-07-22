@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TechStackSelector } from '../components/resumeComponents/TechStackSelector';
 import { ResumeUploader } from '../components/resumeComponents/ResumeUploader';
-import { analyzeResumes } from '../services/analyzeResumes';
+import { analyzeResumes } from '../services/analyze-resumes.ts';
 import { UploadModeTab } from '../components/resumeComponents/UploadModeTab';
 import { UploadedFilesPreview } from '../components/resumeComponents/UploadedFilesPreview';
 import { AnalyzeActions } from '../components/resumeComponents/AnalyzeActions';

@@ -7,7 +7,6 @@ import Schedule from '../../pages/admin/Schedule';
 import Feedback from '../../pages/admin/Feedback';
 
 import ChatInterface from '../../pages/ChatInterface';
-import CodeEditor from '../editorComponents/CodeEditor';
 import AdminLayout from '../../pages/admin/AdminLayout';
 import LoginPage from '../../pages/LoginPage';
 import UserDashboard from '../../pages/UserDashboard';

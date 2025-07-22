@@ -116,7 +116,7 @@ export async function evaluateInterview() {
 
      try {
       const backendResponse = await sendEvaluationToBackend({
-        email: store.getState().interview.candidateEmail ,
+        email: store.getState().interview.candidateEmail ?? '',
         score: result.score,
         feedback: result.feedback,
         status: result.status,

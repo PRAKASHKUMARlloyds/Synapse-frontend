@@ -15,7 +15,7 @@ import credentials from '../../data/user_credentials.json';
 import {
   getEmailValidationMessage,
   getPasswordValidationMessage,
-} from '../../helpers/login_validation.ts';
+} from '../../helpers/login-validation.ts';
 
 export const Login = () => {
   const dispatch = useDispatch();

@@ -2,12 +2,12 @@ import { Button, Stack } from '@mui/material';
 
 const techStacks = ['React', 'Node.js', 'Python', 'Java', 'AWS'];
 
-interface Props {
+interface TechStackSelector {
   selected: string[];
   onSelect: (stack: string) => void;
 }
 
-export const TechStackSelector = ({ selected, onSelect }: Props) => (
+export const TechStackSelector = ({ selected, onSelect }: TechStackSelector) => (
   <Stack direction="row" spacing={2} flexWrap="wrap">
     {techStacks.map((stack) => {
       const isSelected = selected.includes(stack);

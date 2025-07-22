@@ -15,7 +15,8 @@ import {
   Paper,
   Chip,
 } from '@mui/material';
-import { updateName, updateEmail } from '../../redux/resumeAnalysisSlice';
+import type { RootState } from '../../store';
+import { setEmailId, setName } from '../../redux/resumeAnalysisSlice';
 
 type Candidate = {
   name: string;
@@ -52,15 +53,16 @@ const initialCandidates: Candidate[] = [
 const Candidates: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-   const resumeData = useSelector((state: RootState) => state.resumeAnalysis.result);
+  const resumeData = useSelector((state: RootState) => state.resumeAnalysis);
 
   const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
   const [form, setForm] = useState({ name: '', email: '', skills: '' });
 
   const handleUploadResume = () => {
     if (form.name && form.email) {
-      dispatch(updateName(form.name));
-      dispatch(updateEmail(form.email));
+      dispatch(setName(form.name));
+      dispatch(setEmailId(form.email));
+      console.log(form.email && form.name);
     }
     navigate('/admin/analyse');
   };
@@ -71,7 +73,7 @@ const Candidates: React.FC = () => {
   const handleSubmit = () => {
     const isResumeDataValid =
       resumeData?.name &&
-      resumeData?.email &&
+      resumeData?.emailId &&
       Array.isArray(resumeData?.skills) &&
       resumeData.skills.length > 0;
 
@@ -82,7 +84,7 @@ const Candidates: React.FC = () => {
 
     const newCandidate: Candidate = {
       name: resumeData.name,
-      email: resumeData.email,
+      email: resumeData.emailId,
       skills: resumeData.skills.join(', '),
       resumeScore: resumeData.resumeScore,
       status: resumeData.resumeScore >= 80 ? 'Passed' : 'Rejected',

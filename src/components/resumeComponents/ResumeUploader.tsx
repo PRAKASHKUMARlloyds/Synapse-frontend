@@ -20,7 +20,17 @@ export const ResumeUploader = ({ onUpload, mode }: Props) => {
 
   return (
     <Stack spacing={2}>
-      <Button variant="contained" component="label">
+      <Button
+        variant="contained"
+        component="label"
+        sx={{
+          backgroundColor: '#007A33',
+          color: '#fff',
+          '&:hover': {
+            backgroundColor: '#005f27', // slightly darker on hover
+          },
+        }}
+      >
         {mode === 'single' ? 'Upload Resume' : 'Upload Resumes'}
         <input
           type="file"

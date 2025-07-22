@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   Box,
   Typography,
@@ -10,8 +13,9 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Chip
+  Chip,
 } from '@mui/material';
+import { updateName, updateEmail } from '../../redux/resumeAnalysisSlice';
 
 type Candidate = {
   name: string;
@@ -22,28 +26,69 @@ type Candidate = {
 };
 
 const initialCandidates: Candidate[] = [
-  { name: 'Aaryan', email: 'aaryan@samplegmail.com', skills: 'React, Node.js', resumeScore: 'N/A', status: 'Passed' },
-  { name: 'Priya Verma', email: 'priya.verma@gmail.com', skills: 'Python, Django', resumeScore: 25, status: 'Passed' },
-  { name: 'Rohan Mehta', email: 'rohan.mehta@gmail.com', skills: 'Java, Spring', resumeScore: 30, status: 'Rejected' }
+  {
+    name: 'Aaryan',
+    email: 'aaryan@samplegmail.com',
+    skills: 'React, Node.js',
+    resumeScore: 'N/A',
+    status: 'Passed',
+  },
+  {
+    name: 'Priya Verma',
+    email: 'priya.verma@gmail.com',
+    skills: 'Python, Django',
+    resumeScore: 25,
+    status: 'Passed',
+  },
+  {
+    name: 'Rohan Mehta',
+    email: 'rohan.mehta@gmail.com',
+    skills: 'Java, Spring',
+    resumeScore: 30,
+    status: 'Rejected',
+  },
 ];
 
 const Candidates: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+   const resumeData = useSelector((state: RootState) => state.resumeAnalysis.result);
+
   const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
   const [form, setForm] = useState({ name: '', email: '', skills: '' });
+
+  const handleUploadResume = () => {
+    if (form.name && form.email) {
+      dispatch(updateName(form.name));
+      dispatch(updateEmail(form.email));
+    }
+    navigate('/admin/analyse');
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = () => {
-    if (form.name && form.email && form.skills) {
-      const newCandidate: Candidate = {
-        ...form,
-        resumeScore: 'N/A',
-        status: 'Pending'
-      };
-      setCandidates([...candidates, newCandidate]);
-      setForm({ name: '', email: '', skills: '' });
+    const isResumeDataValid =
+      resumeData?.name &&
+      resumeData?.email &&
+      Array.isArray(resumeData?.skills) &&
+      resumeData.skills.length > 0;
+
+    if (!isResumeDataValid) {
+      alert('No analysed resume data available. Please upload and analyse a resume first.');
+      return;
     }
+
+    const newCandidate: Candidate = {
+      name: resumeData.name,
+      email: resumeData.email,
+      skills: resumeData.skills.join(', '),
+      resumeScore: resumeData.resumeScore,
+      status: resumeData.resumeScore >= 80 ? 'Passed' : 'Rejected',
+    };
+
+    setCandidates((prev) => [...prev, newCandidate]);
   };
 
   return (
@@ -54,15 +99,11 @@ const Candidates: React.FC = () => {
 
       {/* Add New Candidate */}
       <Paper elevation={2} sx={{ p: 3, mb: 4, borderLeft: '6px solid #007A33' }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>Add New Candidate</Typography>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Add New Candidate
+        </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-          <TextField
-            label="Name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            fullWidth
-          />
+          <TextField label="Name" name="name" value={form.name} onChange={handleChange} fullWidth />
           <TextField
             label="Email"
             name="email"
@@ -80,7 +121,9 @@ const Candidates: React.FC = () => {
         </Box>
 
         <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-          <Button variant="outlined" color="primary">Upload Resume</Button>
+          <Button variant="outlined" color="primary" onClick={handleUploadResume}>
+            Upload Resume
+          </Button>
           <Button variant="contained" sx={{ backgroundColor: '#007A33' }} onClick={handleSubmit}>
             Submit
           </Button>
@@ -89,7 +132,9 @@ const Candidates: React.FC = () => {
 
       {/* Candidate Table */}
       <Paper elevation={2} sx={{ borderRadius: 2 }}>
-        <Typography variant="h6" sx={{ p: 3, pb: 0, fontWeight: 'bold' }}>Candidate List</Typography>
+        <Typography variant="h6" sx={{ p: 3, pb: 0, fontWeight: 'bold' }}>
+          Candidate List
+        </Typography>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#007A33' }}>
@@ -114,8 +159,8 @@ const Candidates: React.FC = () => {
                       candidate.status === 'Passed'
                         ? 'success'
                         : candidate.status === 'Rejected'
-                        ? 'error'
-                        : 'warning'
+                          ? 'error'
+                          : 'warning'
                     }
                   />
                 </TableCell>

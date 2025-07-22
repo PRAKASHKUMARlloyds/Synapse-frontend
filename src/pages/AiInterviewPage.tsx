@@ -10,6 +10,7 @@ import jsQuestions from '../data/question_answer/js.json';
 import nodejsQuestions from '../data/question_answer/nodejs.json';
 import { evaluateInterview } from '../services/evaluate';
 import CodeEditor from '../components/editorComponents/CodeEditor';
+import { Button } from '@mui/material';
 
 type Question = {
   id?: number;
@@ -142,12 +143,22 @@ export default function AiInterviewPage() {
       {/* <CodeEditor/> */}
 
       {!started ? (
-        <button
-          onClick={() => setStarted(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
+        <Button
+                variant="contained"
+                sx={{
+                  mr: 2,
+                  background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+                  color: "white",
+                  fontWeight: "bold",
+                  px: 3,
+                  py: 1,
+                  borderRadius: 2,
+                  boxShadow: "0 3px 5px 2px rgba(33, 203, 243, .3)"
+                }}
+                onClick={() => setStarted(true)}
+              >
           Start Interview
-        </button>
+        </Button>
       ) : (
         <>
           <div className="bg-gray-100 p-4 rounded shadow">

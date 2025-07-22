@@ -1,40 +1,24 @@
-.editor-container {
-  display: none !important;
-}
-
-#editor-toggle-button {
-  float: right !important;
-  margin: 20px !important;
-}
-
-.SplitPane {
-  position: relative !important;
-}
-
-.Pane {
-  overflow: auto !important;
-}
-
 .Resizer {
-  background: #000 !important;
-  opacity: 0.2 !important;
-  z-index: 1 !important;
-  box-sizing: border-box !important;
-  background-clip: padding-box !important;
-}
-
-.Resizer:hover {
-  transition: all 0.2s ease !important;
+  background: #000;
+  opacity: 0.2;
+  z-index: 1;
+  box-sizing: border-box;
+  background-clip: padding-box;
+  transition: all 0.2s ease;
 }
 
 .Resizer.vertical {
-  width: 5px !important;
-  margin: 0 -2px !important;
-  cursor: col-resize !important;
+  width: 5px;
+  margin: 0 -2px;
+  cursor: col-resize;
 }
 
 .Resizer.horizontal {
-  height: 5px !important;
-  margin: -2px 0 !important;
-  cursor: row-resize !important;
+  height: 5px;
+  margin: -2px 0;
+  cursor: row-resize;
+}
+
+.Resizer:hover {
+  opacity: 0.5;
 }

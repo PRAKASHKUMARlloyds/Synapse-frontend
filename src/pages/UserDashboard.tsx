@@ -5,6 +5,7 @@ import {
   Button,
   Box,
 } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 
 import ChatInterface from "./ChatInterface";
 import { AiInterviewPage } from "./AiInterviewPage";
@@ -14,21 +15,26 @@ export default function UserDashboard() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [submittedCode, setSubmittedCode] = useState("");
+  const [interviewIsComplete, setInterviewIsComplete] = useState(false);
 
-   const handleCodeSubmit = (code: string) => {
-    console.log("Submitted Code:", code);
+  const handleCodeSubmit = (code: string) => {
     setSubmittedCode(code);
   };
 
   const handleOpenChat = () => setIsChatOpen(true);
   const handleToggleEditor = () => setIsEditorOpen((prev) => !prev);
 
+  // Callback for interview completion
+  const handleInterviewComplete = () => setInterviewIsComplete(true);
+
   return (
     <Box
       sx={{
         height: "100vh",
-        overflowY: "auto", // 👈 enable scrolling
+        overflowY: "auto",
         bgcolor: "#f9f9f9",
+        px: { xs: 1, md: 4 },
+        py: 2,
       }}
     >
       <Container maxWidth="xl" sx={{ mt: 4, position: "relative", pb: 4 }}>
@@ -37,7 +43,7 @@ export default function UserDashboard() {
             mt: 4,
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
-            gap: 2,
+            gap: 3,
             minHeight: "70vh",
           }}
         >
@@ -46,43 +52,56 @@ export default function UserDashboard() {
             sx={{
               flex: isEditorOpen ? 0.6 : 1,
               transition: "all 0.3s ease",
-              overflow: "visible", // let content grow
+              overflow: "visible",
+              bgcolor: "#fff",
+              borderRadius: 2,
+              boxShadow: 1,
+              p: 2,
+              position: "relative"
             }}
           >
             <Typography variant="h4" gutterBottom>
-              User Dashboard
+              Welcome to Your Interview Portal
             </Typography>
-
-            <Box sx={{ mt: 2, position: "relative", minHeight: "50px" }}>
-              {!isChatOpen && (
+            {/* Place Open Code Editor button at top right */}
+            {!isEditorOpen && (
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleToggleEditor}
+                sx={{
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
+                  minWidth: 0,
+                  p: 1.5,
+                  borderRadius: "8px",
+                  zIndex: 2,
+                }}
+              >
+                Open Code Editor
+              </Button>
+            )}
+            <Box sx={{ mt: 4 }}>
+              <AiInterviewPage
+                submittedCode={submittedCode}
+                align={isEditorOpen ? "left" : "center"}
+                onInterviewComplete={handleInterviewComplete}
+              />
+              {/* Show Open Chat button only after interview is complete and chat is not open */}
+              {!isChatOpen && interviewIsComplete && (
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={handleOpenChat}
-                  sx={{ mr: 2 }}
+                  sx={{ mt: 2 }}
                 >
                   Open Chat
                 </Button>
               )}
-
-              {/* Editor toggle */}
-              <Box sx={{ position: "absolute", top: 0, right: 0, zIndex: 10 }}>
-                <Button
-                  variant="contained"
-                  color={isEditorOpen ? "error" : "success"}
-                  onClick={handleToggleEditor}
-                >
-                  {isEditorOpen ? "Close" : "Open Code Editor"}
-                </Button>
-              </Box>
-            </Box>
-
-            <Box sx={{ mt: 4 }}>
-              <AiInterviewPage submittedCode={submittedCode} />
               {isChatOpen && <ChatInterface />}
             </Box>
           </Box>
-
           {/* Right side: Editor */}
           {isEditorOpen && (
             <Box
@@ -91,8 +110,28 @@ export default function UserDashboard() {
                 minWidth: { xs: "100%", md: "40%" },
                 transition: "all 0.3s ease",
                 overflow: "auto",
+                bgcolor: "#fff",
+                borderRadius: 2,
+                boxShadow: 1,
+                p: 2,
+                position: "relative"
               }}
             >
+              <Button
+                onClick={handleToggleEditor}
+                sx={{
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
+                  minWidth: 0,
+                  p: 1,
+                  borderRadius: "50%",
+                  zIndex: 2,
+                }}
+                color="error"
+              >
+                <CloseIcon />
+              </Button>
               <CodeEditor onSubmit={handleCodeSubmit}/>
             </Box>
           )}

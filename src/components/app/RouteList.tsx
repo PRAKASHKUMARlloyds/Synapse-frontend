@@ -30,6 +30,7 @@ export const RoutesList = () => {
           <Route path="candidates" element={<Candidates />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="feedback" element={<Feedback />} />
+          <Route path="analyse" element={<ResumeAnalysis />} />
         </Route>
       </Routes>
     </div>

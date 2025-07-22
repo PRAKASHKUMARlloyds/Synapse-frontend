@@ -8,16 +8,30 @@ import { AnalyzeActions } from '../components/resumeComponents/AnalyzeActions';
 import { LoadingIndicator } from '../components/resumeComponents/LoadingIndicator';
 import { SingleResultDisplay } from '../components/resumeComponents/SingleResultDisplay';
 import { BulkResultDisplay } from '../components/resumeComponents/BulkResultDisplay';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '../store.ts';
+import {
+  setResumeAnalysis,
+  updateSkills,
+  updateScore,
+  updateStatus,
+} from '../redux/resumeAnalysisSlice';
 
 const loadingMessages = [
   '🚀 Launching resume into orbit...',
   '⚡ AI neurons firing up!',
   '🔍 Scanning for tech synergy...',
   '🤖 Crunching bytes of brilliance...',
-  '💡 Optimizing your potential...'
+  '💡 Optimizing your potential...',
 ];
 
 const ResumeAnalysis = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const resumeData = useSelector((state: RootState) => state.resumeAnalysis.result);
+
   const [selectedStacks, setSelectedStacks] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<'single' | 'bulk'>('single');
 
@@ -31,11 +45,19 @@ const ResumeAnalysis = () => {
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  const handleClose = () => {
+    // Clear state if needed before navigation
+    setSingleFile(null);
+    setSingleResult(null);
+    setBulkFiles(null);
+    setBulkResults([]);
+    setErrorMessage('');
+    navigate('/admin/candidates');
+  };
+
   const handleStackSelect = (stack: string) => {
-    setSelectedStacks(prev =>
-      prev.includes(stack)
-        ? prev.filter(s => s !== stack)
-        : [...prev, stack]
+    setSelectedStacks((prev) =>
+      prev.includes(stack) ? prev.filter((s) => s !== stack) : [...prev, stack]
     );
   };
 
@@ -62,14 +84,25 @@ const ResumeAnalysis = () => {
     setIsLoading(true);
 
     const interval = setInterval(() => {
-      setLoadingMessageIndex(prev =>
-        (prev + 1) % loadingMessages.length
-      );
+      setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
     }, 1500);
 
     if (activeTab === 'single' && singleFile) {
       const res = await analyzeResumes({ 0: singleFile, length: 1 }, selectedStacks);
-      setSingleResult(res[0]);
+      const result = res[0];
+      if (resumeData) {
+        dispatch(
+          setResumeAnalysis({
+            name: resumeData.name,
+            email: resumeData.email,
+            skills: result.skills,
+            resumeScore: result.resumeScore,
+            status: result.status,
+          })
+        );
+      }
+
+      setSingleResult(result);
     } else if (activeTab === 'bulk' && bulkFiles) {
       const res = await analyzeResumes(bulkFiles, selectedStacks);
       setBulkResults(res);
@@ -79,50 +112,56 @@ const ResumeAnalysis = () => {
     setIsLoading(false);
   };
 
-  const canAnalyze =
-    (activeTab === 'single' && singleFile) ||
-    (activeTab === 'bulk' && bulkFiles);
+  const canAnalyze = (activeTab === 'single' && singleFile) || (activeTab === 'bulk' && bulkFiles);
 
   return (
     <>
       <h1 style={{ textAlign: 'center', marginTop: '20px' }}>Resume Analyser</h1>
-      <TechStackSelector
-        selected={selectedStacks}
-        onSelect={handleStackSelect}
-      />
+      <TechStackSelector selected={selectedStacks} onSelect={handleStackSelect} />
       <br />
-      <UploadModeTab
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+      <UploadModeTab activeTab={activeTab} setActiveTab={setActiveTab} />
       <br />
-      <ResumeUploader
-        onUpload={files => handleUpload(files, activeTab)}
-        mode={activeTab}
-      />
-      <UploadedFilesPreview
-        activeTab={activeTab}
-        singleFile={singleFile}
-        bulkFiles={bulkFiles}
-      />
+      <ResumeUploader onUpload={(files) => handleUpload(files, activeTab)} mode={activeTab} />
+      <UploadedFilesPreview activeTab={activeTab} singleFile={singleFile} bulkFiles={bulkFiles} />
       <AnalyzeActions
         canAnalyze={Boolean(canAnalyze)}
         errorMessage={errorMessage}
         onAnalyze={handleAnalyze}
         activeTab={activeTab}
       />
-      {isLoading && (
-        <LoadingIndicator message={loadingMessages[loadingMessageIndex]} />
+      {isLoading && <LoadingIndicator message={loadingMessages[loadingMessageIndex]} />}
+      {!isLoading && activeTab === 'single' && singleResult && (
+        <SingleResultDisplay result={singleResult} selectedStacks={selectedStacks} />
       )}
-      {(!isLoading && activeTab === 'single' && singleResult) && (
-        <SingleResultDisplay
-          result={singleResult}
-          selectedStacks={selectedStacks}
-        />
-      )}
-      {(!isLoading && activeTab === 'bulk' && bulkResults.length > 0) && (
+      {!isLoading && activeTab === 'bulk' && bulkResults.length > 0 && (
         <BulkResultDisplay results={bulkResults} />
       )}
+      <div
+        style={{
+          marginLeft: '250px', // adjust to match sidebar width
+          padding: '2rem',
+          minHeight: '100vh',
+          boxSizing: 'border-box',
+          position: 'relative',
+        }}
+      >
+        <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+          <button
+            onClick={handleClose}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#007A33',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </>
   );
 };

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 // import CloseIcon from "@mui/icons-material/Close";
 import { Container, IconButton, Box } from "@mui/material";
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import type {ImperativePanelHandle} from 'react-resizable-panels';
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 // import "../CSS/console.css";
@@ -17,6 +18,7 @@ interface ConsoleCompProps {
   minimize: boolean;
   changeMinimize: (val: boolean) => void;
   output: OutputType;
+  consolePanelRef:  React.RefObject<ImperativePanelHandle> | null
 }
 
 const boxStyle = {
@@ -36,7 +38,14 @@ const boxStyle = {
   overflowX: "hidden",
 } as React.CSSProperties;;
 
-const ConsoleComp: React.FC<ConsoleCompProps> = ({ minimize, changeMinimize, output }) => {
+const ConsoleComp: React.FC<ConsoleCompProps> = ({ minimize, changeMinimize, output, consolePanelRef }) => {
+
+  useEffect(() => {
+    if(consolePanelRef.current){
+      consolePanelRef.current.collapse();
+    }
+  },[]);
+
   useEffect(() => {
     const el = document.getElementsByClassName("consolecomp")[0] as HTMLElement | undefined;
     if (el) {

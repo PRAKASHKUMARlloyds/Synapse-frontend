@@ -1,76 +1,18 @@
+
 import React from 'react';
 import {
-  Box,
-  Typography,
-  Paper,
-  Table,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Chip
+  Box, Typography, Paper, Table, TableContainer,
+  TableHead, TableRow, TableCell, TableBody, Chip
 } from '@mui/material';
-
-type FeedbackEntry = {
-  name: string;
-  email: string;
-  skills: string;
-  resumeScore: number | string;
-  status: 'Passed' | 'Rejected' | 'Pending';
-  videoUrl?: string;
-  aiTrigger: 'AI Trigger' | 'No Trigger';
-};
-
-const feedbacks: FeedbackEntry[] = [
-  {
-    name: 'Akansha Sharma',
-    email: 'akansha@gmail.com',
-    skills: 'React, Node.js',
-    resumeScore: 'N/A',
-    status: 'Passed',
-    videoUrl: 'https://www.youtube.com/watch?v=video1',
-    aiTrigger: 'No Trigger'
-  },
-  {
-    name: 'Priya Verma',
-    email: 'priya.verma@gmail.com',
-    skills: 'Python, Django',
-    resumeScore: 25,
-    status: 'Passed',
-    videoUrl: 'https://www.youtube.com/watch?v=video2',
-    aiTrigger: 'No Trigger'
-  },
-  {
-    name: 'Ronit Mehta',
-    email: 'ronit.mehta@gmail.com',
-    skills: 'Java, Spring',
-    resumeScore: 30,
-    status: 'Rejected',
-    videoUrl: 'https://www.youtube.com/watch?v=video3',
-    aiTrigger: 'AI Trigger'
-  },
-  {
-    name: 'Sneha Iyer',
-    email: 'sneha.iyer@gmail.com',
-    skills: 'QA, Selenium',
-    resumeScore: 18,
-    status: 'Pending',
-    videoUrl: 'https://www.youtube.com/watch?v=video4',
-    aiTrigger: 'AI Trigger'
-  }
-];
+import { useSelector } from 'react-redux';
+import { type RootState } from '../../store';
+import type { FeedbackEntry } from '../../redux/feedbackSlice';
 
 const Feedback: React.FC = () => {
+  const feedbacks: FeedbackEntry[] = useSelector((state: RootState) => state.feedback.entries);
+
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        px: { xs: 2, sm: 4, md: 6 },
-        py: 5,
-        background: 'linear-gradient(to bottom right, #f0f4f7, #e3edea)'
-      }}
-    >
+    <Box sx={{ minHeight: '100vh', px: { xs: 2, sm: 4, md: 6 }, py: 5, background: 'linear-gradient(to bottom right, #f0f4f7, #e3edea)' }}>
       <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', color: '#007A33' }}>
         📝 Feedback Overview
       </Typography>
@@ -111,11 +53,8 @@ const Feedback: React.FC = () => {
                     <Chip
                       label={entry.status}
                       color={
-                        entry.status === 'Passed'
-                          ? 'success'
-                          : entry.status === 'Rejected'
-                          ? 'error'
-                          : 'warning'
+                        entry.status === 'Passed' ? 'success' :
+                        entry.status === 'Rejected' ? 'error' : 'warning'
                       }
                       variant="outlined"
                     />
@@ -147,9 +86,9 @@ const Feedback: React.FC = () => {
                     </a>
                   </TableCell>
                   <TableCell>
-                    {entry.aiTrigger === 'AI Trigger' ? (
+                    {entry.aiTrigger === 'AI Trigger' && (
                       <Chip label="Flagged" color="error" />
-                    ) : null}
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

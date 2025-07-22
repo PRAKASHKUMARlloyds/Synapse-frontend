@@ -6,11 +6,17 @@ import { combineReducers } from "redux";
 import authenticationSlice from "./redux/authenticationSlice";
 import candidateDataSlice from "./redux/candidateDataSlice";
 import interviewSlice from "./redux/interviewSlice";
+import interviewScheduleSlice from "./redux/interviewScheduleSlice";
+import FeedbackSlice from "./redux/feedbackSlice"; 
 
 const rootReducer = combineReducers({
   authentiction: authenticationSlice,
   candidateData: candidateDataSlice,
   interview: interviewSlice,
+  interviewSchedule: interviewScheduleSlice,
+  feedback: FeedbackSlice, 
+
+
 });
 
 const persistConfig = {

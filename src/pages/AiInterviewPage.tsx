@@ -1,40 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+  Box,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import useAudioToText from '../hooks/useAudioToText';
 import { addAnswer, setCandidateEmail } from '../redux/interviewSlice';
+import { evaluateInterview } from '../services/evaluate';
+import useAudioToText from '../hooks/useAudioToText';
 import { useSpeechSynthesizer } from '../hooks/useSpeechSynthesizer';
 import { useRandomQuestions } from '../hooks/useRandomQuestions';
-
 import reactQuestions from '../data/question_answer/react.json';
 import jsQuestions from '../data/question_answer/js.json';
 import nodejsQuestions from '../data/question_answer/nodejs.json';
 import jsCodingQuestions from '../data/question_answer/js_coding.json';
 
-import { evaluateInterview } from '../services/evaluate';
-import { Button, Typography, Paper, Box } from '@mui/material';
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
-import GraphicEqIcon from '@mui/icons-material/GraphicEq';
-
 type Question = {
   id?: number;
   question: string;
-  answer?: string;
   category: string;
   difficulty?: string;
 };
 
 interface AiInterviewPageProps {
   submittedCode: string;
-  align?: "center" | "left";
-  onInterviewComplete?: () => void;
+  onReadQuestion?: (text: string) => void;
+  onStartInterview?: () => Promise<void>;
+  loading?: boolean;
+  imageReady?: boolean;
 }
 
 export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   submittedCode,
-  align,
-  onInterviewComplete,
+  onReadQuestion,
+  onStartInterview,
+  loading,
+  imageReady,
 }) => {
+  const dispatch = useDispatch();
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState<'smalltalk' | 'interview'>('smalltalk');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,11 +48,10 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   const [silentTimer, setSilentTimer] = useState<NodeJS.Timeout | null>(null);
   const [codingTimer, setCodingTimer] = useState<NodeJS.Timeout | null>(null);
   const [interviewComplete, setInterviewComplete] = useState(false);
+  const [showTranscription, setShowTranscription] = useState(true); // Default ON
+  const [questionTranscription, setQuestionTranscriptionState] = useState('');
 
-  const dispatch = useDispatch();
   const { speak } = useSpeechSynthesizer();
-  const userEmail = useSelector((state: any) => state.authentiction.user?.email);
-
   const {
     transcript,
     listening,
@@ -56,29 +61,26 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
     stopListening,
   } = useAudioToText();
 
-  const randomQuestions = useRandomQuestions(
+   const userEmail = useSelector((state: any) => state.authentiction.user?.email);
+
+   const randomQuestions = useRandomQuestions(
     reactQuestions,
     jsQuestions,
     nodejsQuestions
   );
 
-  const interviewQuestions = [
-    ...randomQuestions,
-    jsCodingQuestions.js_coding[0] // coding question at the end
-  ];
-
+  const interviewQuestions = [...randomQuestions, jsCodingQuestions.js_coding[0]];
   const smallTalks = [
-    "Hi! Good Morning. How are you today?",
-    "Are you comfortable? Shall we begin shortly?"
+    'Hi! Good Morning. How are you today?',
+    'Are you comfortable? Shall we begin shortly?',
   ];
 
   useEffect(() => {
-    if (interviewComplete) {
-      dispatch(setCandidateEmail(userEmail));
-      evaluateInterview();
-      if (onInterviewComplete) onInterviewComplete();
+    if (interviewComplete){
+       dispatch(setCandidateEmail(userEmail));
+       evaluateInterview();
     }
-  }, [dispatch, interviewComplete, userEmail, onInterviewComplete]);
+  }, [interviewComplete]);
 
   useEffect(() => {
     if (
@@ -87,14 +89,28 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
       isCodingQuestion() &&
       submittedCode.trim()
     ) {
-      console.log("Detected submitted code for coding question, dispatching.");
       recordCodingAnswer(submittedCode);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submittedCode]);
 
   useEffect(() => {
-    if (!started) return;
+    if (!started || !imageReady) return;
+
+    // When a new question is asked, update the question transcription
+    const runInteraction = (text: string) => {
+      // Trigger lipsync and transcription immediately
+      setQuestionTranscriptionState(text);
+      onReadQuestion?.(text);
+
+      // Delay only the voice (speak) so lipsync and voice start together
+      setTimeout(() => {
+        speak(text, () => {
+          resetTranscript();
+          startListening();
+          isCodingQuestion() ? startCodingTimer() : resetSilentTimer();
+        });
+      }, 1000); // Delay voice by 1 second (adjust as needed)
+    };
 
     if (phase === 'smalltalk') {
       if (currentIndex >= smallTalks.length) {
@@ -102,67 +118,40 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
         setCurrentIndex(0);
         return;
       }
-
       const text = smallTalks[currentIndex];
       setQuestion(text);
-      resetTranscript();
-
-      speak(text, () => {
-        startListening();
-        resetSilentTimer();
-      });
+      runInteraction(text);
     }
 
     if (phase === 'interview') {
       if (currentIndex >= interviewQuestions.length) {
-        setQuestion('Interview complete. Thank you!');
+        setQuestion('');
         setInterviewComplete(true);
         return;
       }
-
       const q = interviewQuestions[currentIndex];
       const text = typeof q === 'string' ? q : q.question;
-
       setQuestion(q);
-      resetTranscript();
-
-      speak(text, () => {
-        startListening();
-        if (isCodingQuestion()) {
-          startCodingTimer();
-        } else {
-          resetSilentTimer();
-        }
-      });
+      runInteraction(text);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started, currentIndex, phase]);
+  }, [started, currentIndex, phase, imageReady]);
 
   useEffect(() => {
-    if (listening && transcript) {
-      resetSilentTimer();
-    }
+    if (listening && transcript) resetSilentTimer();
   }, [transcript]);
 
   const resetSilentTimer = () => {
     if (silentTimer) clearTimeout(silentTimer);
-    const timer = setTimeout(() => {
-      recordAnswerAndAdvance();
-    }, 10000);
-    setSilentTimer(timer);
+    setSilentTimer(setTimeout(() => recordAnswerAndAdvance(), 10000));
   };
 
   const startCodingTimer = () => {
     if (codingTimer) clearTimeout(codingTimer);
-    const timer = setTimeout(() => {
-      console.log('1 minute passed. Submitting whatever code is present.');
-      recordCodingAnswer(submittedCode || '');
-    }, 60000);
-    setCodingTimer(timer);
-  };
-
-  const isCodingQuestion = () => {
-    return currentIndex === interviewQuestions.length - 1;
+    setCodingTimer(
+      setTimeout(() => {
+        recordCodingAnswer(submittedCode || '');
+      }, 60000)
+    );
   };
 
   const recordAnswerAndAdvance = () => {
@@ -170,17 +159,14 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
     if (silentTimer) clearTimeout(silentTimer);
 
     if (phase === 'smalltalk' && typeof question === 'string') {
-      console.log('[SmallTalk] Answer:', transcript);
+      console.log('[SmallTalk]', transcript);
     } else if (phase === 'interview' && typeof question !== 'string') {
-      if (isCodingQuestion()) {
-        recordCodingAnswer(submittedCode || '');
-        return;
-      } else {
-        dispatch(addAnswer({ question: question.question, answer: transcript }));
-      }
+      isCodingQuestion()
+        ? recordCodingAnswer(submittedCode || '')
+        : dispatch(addAnswer({ question: question.question, answer: transcript }));
     }
 
-    setCurrentIndex(prev => prev + 1);
+    setCurrentIndex((prev) => prev + 1);
   };
 
   const recordCodingAnswer = (code: string) => {
@@ -188,190 +174,167 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
     const q = interviewQuestions[currentIndex];
     if (typeof q !== 'string' && code.trim()) {
       dispatch(addAnswer({ question: q.question, answer: code }));
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
     }
   };
 
-
-  // Mic button state
-  const [micEnabled, setMicEnabled] = useState(false);
-
-  // Mic button handler
-  const handleMicClick = () => {
-    if (!micEnabled) {
-      setMicEnabled(true);
-      startListening();
-    } else {
-      setMicEnabled(false);
-      stopListening();
-    }
-  };
-  // Accept an optional prop to control alignment (center or left)
-  // You can pass this from UserDashboard based on editor state
-  // Example: <AiInterviewPage submittedCode={submittedCode} align={isEditorOpen ? "left" : "center"} />
-  const alignment = typeof align === "string" ? align : "center";
+  const isCodingQuestion = () => currentIndex === interviewQuestions.length - 1;
 
   if (!browserSupportsSpeechRecognition) {
     return (
-      <Paper elevation={3} sx={{ p: 4, mt: 4, textAlign: 'center', color: 'error.main' }}>
-        <Typography variant="h6">
-          Your browser doesn’t support speech recognition.
-        </Typography>
-      </Paper>
+      <Card sx={{ mt: 3 }}>
+        <CardContent>
+          <Typography color="error">
+            Your browser doesn’t support speech recognition.
+          </Typography>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <Box
-      className="p-6"
+    <Card
+      elevation={6}
       sx={{
-        maxWidth: 480,
-        mx: alignment === "center" ? "auto" : 0,
-        ml: alignment === "left" ? 0 : "auto",
-        mr: alignment === "left" ? "auto" : "auto",
-        spaceY: 6,
-        transition: "margin 0.3s",
+        borderRadius: 4,
+        background: 'linear-gradient(180deg, #f9fbfd 0%, #f1f5f9 100%)',
+        p: 4,
+        boxShadow: '0px 4px 16px rgba(0,0,0,0.05)',
+        maxWidth: 600,
+        mx: 'auto',
       }}
     >
-      {/* Header with mic button next to title */}
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <Box>
-          <Typography variant="h4" fontWeight="bold" gutterBottom sx={{ color: "#1976d2", fontSize: 32 }}>
-            AI Interview Assistant
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ fontSize: 16 }}>
-            Answer questions by speaking or coding. Click the mic to start/stop listening.
+      <CardContent>
+        {/* Centered Title */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Typography variant="h5" fontWeight={700} gutterBottom>
+            🧠 AI Interview Assistant
           </Typography>
         </Box>
-        <Button
-          variant="outlined"
-          color={micEnabled ? "primary" : "inherit"}
-          sx={{
-            minWidth: 0,
-            borderRadius: "50%",
-            width: 56,
-            height: 56,
-            ml: 2,
-            background: micEnabled ? "#e3f2fd" : "#f5f5f5",
-            boxShadow: micEnabled ? "0 0 8px #2196F3" : "none",
-            display: started ? "inline-flex" : "none"
-          }}
-          onClick={handleMicClick}
-          disabled={!started}
-        >
-          {listening ? (
-            <MicIcon sx={{ color: "#2196F3", fontSize: 32 }} />
-          ) : (
-            <MicOffIcon sx={{ color: "#757575", fontSize: 32 }} />
-          )}
-        </Button>
-        {micEnabled && listening && (
-          <GraphicEqIcon sx={{ color: "#2196F3", fontSize: 32, animation: "wave 1s infinite", ml: 1 }} />
-        )}
-        <style>
-          {`
-            @keyframes wave {
-              0% { opacity: 0.5; transform: scaleY(1); }
-              50% { opacity: 1; transform: scaleY(1.3); }
-              100% { opacity: 0.5; transform: scaleY(1); }
-            }
-          `}
-        </style>
-      </Box>
 
-      {!started ? (
-        <Button
-          variant="contained"
+        {/* Buttons row: left and right alignment, closer together */}
+        <Box
           sx={{
-            mr: 2,
-            background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
-            color: "white",
-            fontWeight: "bold",
-            px: 3,
-            py: 1,
-            borderRadius: 2,
-            boxShadow: "0 3px 5px 2px rgba(33, 203, 243, .3)"
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2, // Add gap between buttons
+            mb: 3,
+            flexWrap: 'wrap',
           }}
-          onClick={() => setStarted(true)}
         >
-          Start Interview
-        </Button>
-      ) : (
-        <>
-          {started && (
-            <>
-              {/* Compact question panel */}
-              <Paper
-                elevation={2}
+          {/* Start Interview Button */}
+          <Button
+            variant="contained"
+            disabled={started || loading}
+            startIcon={
+              loading ? <CircularProgress size={18} sx={{ color: '#fff' }} /> : null
+            }
+            sx={{
+              background: loading
+                ? 'linear-gradient(to right, #999 30%, #ccc 90%)'
+                : 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              color: 'white',
+              fontWeight: 'bold',
+              px: 3,
+              py: 1,
+              borderRadius: 2,
+              boxShadow: loading
+                ? '0 3px 5px 2px rgba(180,180,180,0.3)'
+                : '0 3px 5px 2px rgba(33,203,243,.3)',
+              '&:hover': {
+                background: loading
+                  ? 'linear-gradient(to right, #aaa 30%, #ddd 90%)'
+                  : 'linear-gradient(45deg, #1976D2 30%, #2196F3 90%)',
+              },
+              minWidth: 160,
+            }}
+            onClick={async () => {
+              await onStartInterview?.();
+              setStarted(true);
+            }}
+          >
+            {loading ? 'Connecting...' : 'Start Interview'}
+          </Button>
+
+          {/* Transcription Toggle or Coding Info Button */}
+          {isCodingQuestion() && !interviewComplete ? (
+            <Button
+              variant="outlined"
+              sx={{
+                fontWeight: 600,
+                borderRadius: 2,
+                minWidth: 160,
+              }}
+              disabled
+            >
+              Hide Answer Transcription
+            </Button>
+          ) : (
+            <Button
+              variant={showTranscription ? "outlined" : "contained"}
+              sx={{
+                fontWeight: 600,
+                borderRadius: 2,
+                minWidth: 160,
+              }}
+              onClick={() => setShowTranscription((prev) => !prev)}
+              disabled={interviewComplete}
+            >
+              {showTranscription ? 'Hide Transcription' : 'Show Transcription'}
+            </Button>
+          )}
+        </Box>
+
+        {/* Interview content */}
+        {!started ? (
+          <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+            Click "Start Interview" to begin your AI-powered interview session.
+          </Typography>
+        ) : (
+          <>
+            {interviewComplete && (
+              <Typography
                 sx={{
-                  p: 2,
-                  mb: 2,
-                  bgcolor: '#f7fafc',
-                  maxWidth: 520,
-                  minWidth: 320,
-                  mx: "auto",
-                  maxHeight: 64,
-                  minHeight: 44,
-                  overflowY: 'auto',
-                  fontSize: 16,
-                  display: 'flex',
-                  alignItems: 'center',
+                  mt: 3,
+                  bgcolor: '#e6ffed',
+                  color: '#22863a',
+                  px: 2,
+                  py: 1,
                   borderRadius: 2,
+                  border: '1px solid #c3e6cb',
                 }}
               >
-                <Typography variant="subtitle1" fontWeight="bold" sx={{ fontSize: 17, mr: 1 }}>
-                  {phase === 'smalltalk' ? 'Small Talk:' : 'Question:'}
-                </Typography>
-                <Typography variant="body1" sx={{ fontSize: 16 }}>
-                  {typeof question === 'string' ? question : question.question}
-                </Typography>
-              </Paper>
+                ✅ Interview complete. Thank you!
+              </Typography>
+            )}
 
-              {/* Compact answer panel */}
-              {question !== 'Interview complete. Thank you!' && (
-                <Paper
-                  elevation={1}
-                  sx={{
-                    p: 2,
-                    mb: 2,
-                    maxWidth: 520,
-                    minWidth: 380,
-                    mx: "auto",
-                    maxHeight: 80,
-                    minHeight: 50,
-                    overflowY: 'auto',
-                    fontSize: 15,
-                    display: 'flex',
-                    alignItems: 'center',
-                    borderRadius: 2,
-                  }}
-                >
-                  <Typography variant="subtitle2" fontWeight="bold" sx={{ fontSize: 15, mr: 1 }}>
-                    Your Answer:
+            {/* Show transcription only if interview is not complete and not coding question */}
+            {showTranscription && !interviewComplete && (
+              <Box sx={{ mt: 2, mb: 2 }}>
+                <Typography variant="subtitle2" fontWeight="bold">
+                  Question:
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  {questionTranscription}
+                </Typography>
+                <Typography variant="subtitle2" fontWeight="bold">
+                  Your Answer:
+                </Typography>
+                {isCodingQuestion() ? (
+                  <Typography variant="body2" color="warning.main">
+                    Please open the code editor and submit your code answer.
                   </Typography>
-                  <Typography variant="body1" sx={{ fontSize: 15 }}>
-                    {isCodingQuestion()
-                      ? submittedCode || '(waiting for code submission)'
-                      : transcript || (!listening ? 'Start speaking to see text here.' : 'Listening…')}
+                ) : (
+                  <Typography variant="body2">
+                    {transcript}
                   </Typography>
-                </Paper>
-              )}
-
-              {/* Completion message */}
-              {question === 'Interview complete. Thank you!' && (
-                <Paper elevation={3} sx={{ p: 3, mt: 2, textAlign: 'center', bgcolor: '#e8f5e9', borderRadius: 2 }}>
-                  <Typography variant="h6" color="success.main" fontWeight="bold">
-                    🎉 Interview Complete!
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Thank you for participating. Your responses have been submitted.
-                  </Typography>
-                </Paper>
-              )}
-            </>
-          )}
-        </>
-      )}
-    </Box>
+                )}
+              </Box>
+            )}
+          </>
+        )}
+      </CardContent>
+    </Card>
   );
 };

@@ -1,6 +1,12 @@
 import { useState } from 'react';
+import { Container, Typography, Paper, Box, Divider, IconButton, Button } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '../store.ts';
+
 import { TechStackSelector } from '../components/resumeComponents/TechStackSelector';
-import { ResumeUploader } from '../components/resumeComponents/ResumeUploader';
 import { analyzeResumes } from '../services/analyze-resumes.ts';
 import { UploadModeTab } from '../components/resumeComponents/UploadModeTab';
 import { UploadedFilesPreview } from '../components/resumeComponents/UploadedFilesPreview';
@@ -8,12 +14,9 @@ import { AnalyzeActions } from '../components/resumeComponents/AnalyzeActions';
 import { LoadingIndicator } from '../components/resumeComponents/LoadingIndicator';
 import { SingleResultDisplay } from '../components/resumeComponents/SingleResultDisplay';
 import { BulkResultDisplay } from '../components/resumeComponents/BulkResultDisplay';
-import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '../store.ts';
-import {
-  setCandidateData,
-} from '../redux/resumeAnalysisSlice.tsx';
+
+import { setCandidateData } from '../redux/resumeAnalysisSlice.tsx';
+import { addInterview } from '../redux/interviewScheduleSlice.tsx';
 
 const loadingMessages = [
   '🚀 Launching resume into orbit...',
@@ -43,7 +46,6 @@ const ResumeAnalysis = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleClose = () => {
-    // Clear state if needed before navigation
     setSingleFile(null);
     setSingleResult(null);
     setBulkFiles(null);
@@ -63,7 +65,6 @@ const ResumeAnalysis = () => {
     setErrorMessage('');
     setLoadingMessageIndex(0);
     setBulkResults([]);
-
     if (mode === 'single') {
       setSingleFile(files[0] ?? null);
     } else {
@@ -85,7 +86,7 @@ const ResumeAnalysis = () => {
     }, 1500);
 
     if (activeTab === 'single' && singleFile) {
-      const fileList: FileList = {
+       const fileList: FileList = {
           0: singleFile,
           length: 1,
           item: (index: number) => (index === 0 ? singleFile : null),
@@ -101,7 +102,7 @@ const ResumeAnalysis = () => {
           result.name +
           result.relevance
       );
-   
+
       if (resumeData) {
         dispatch(
           setCandidateData({
@@ -112,17 +113,17 @@ const ResumeAnalysis = () => {
             status: result.relevance > 80 ? 'Rejected' : 'Passed',
           })
         );
-        //  dispatch(
-        // setResumeAnalysis({
-        //   name: resumeData.name,
-        //   email: resumeData.email,
-        //   skills: result.skills,
-        //   resumeScore: result.resumeScore,
-        //   status: result.status,
-        // })
-        // );
-      }
 
+        dispatch(
+          addInterview({
+            id: 7,
+            candidate: name,
+            position: 'Software Engineer',
+            date: '',
+            experience: '2 years',
+          })
+        );
+      }
       setSingleResult(result);
     } else if (activeTab === 'bulk' && bulkFiles) {
       const res = await analyzeResumes(bulkFiles, selectedStacks);
@@ -136,54 +137,100 @@ const ResumeAnalysis = () => {
   const canAnalyze = (activeTab === 'single' && singleFile) || (activeTab === 'bulk' && bulkFiles);
 
   return (
-    <>
-      <h1 style={{ textAlign: 'center', marginTop: '20px' }}>Resume Analyser</h1>
-      <TechStackSelector selected={selectedStacks} onSelect={handleStackSelect} />
-      <br />
-      <UploadModeTab activeTab={activeTab} setActiveTab={setActiveTab} />
-      <br />
-      <ResumeUploader onUpload={(files) => handleUpload(files, activeTab)} mode={activeTab} />
-      <UploadedFilesPreview activeTab={activeTab} singleFile={singleFile} bulkFiles={bulkFiles} />
-      <AnalyzeActions
-        canAnalyze={Boolean(canAnalyze)}
-        errorMessage={errorMessage}
-        onAnalyze={handleAnalyze}
-        activeTab={activeTab}
-      />
-      {isLoading && <LoadingIndicator message={loadingMessages[loadingMessageIndex]} />}
-      {!isLoading && activeTab === 'single' && singleResult && (
-        <SingleResultDisplay result={singleResult} selectedStacks={selectedStacks} />
-      )}
-      {!isLoading && activeTab === 'bulk' && bulkResults.length > 0 && (
-        <BulkResultDisplay results={bulkResults} />
-      )}
-      <div
-        style={{
-          marginLeft: '250px', // adjust to match sidebar width
-          padding: '2rem',
-          minHeight: '100vh',
-          boxSizing: 'border-box',
-          position: 'relative',
+    <Container maxWidth="md" sx={{ py: 4, position: 'relative' }}>
+      {/* ❌ Top-right close icon */}
+      <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
+        <IconButton
+          onClick={handleClose}
+          sx={{
+            backgroundColor: 'white',
+            color: '#007A33',
+            boxShadow: 1,
+            borderRadius: 1,
+            '&:hover': { backgroundColor: '#f0f0f0' },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
+      {/* 📄 Title */}
+      <Typography variant="h4" fontWeight={700} textAlign="center" gutterBottom>
+        📄 Resume Analyzer
+      </Typography>
+      <Divider sx={{ mb: 4 }} />
+
+      {/* 🎨 Analyzer Card */}
+      <Paper
+        elevation={4}
+        sx={{
+          borderRadius: 4,
+          background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+          p: { xs: 2, sm: 3 },
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         }}
       >
-        <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-          <button
-            onClick={handleClose}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#007A33',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
+        <TechStackSelector selected={selectedStacks} onSelect={handleStackSelect} />
+
+        <Box sx={{ my: 3 }}>
+          <UploadModeTab activeTab={activeTab} setActiveTab={setActiveTab} />
+        </Box>
+
+        <UploadedFilesPreview activeTab={activeTab} singleFile={singleFile} bulkFiles={bulkFiles} />
+
+        <AnalyzeActions
+          canAnalyze={Boolean(canAnalyze)}
+          errorMessage={errorMessage}
+          onAnalyze={handleAnalyze}
+          activeTab={activeTab}
+        />
+
+        {isLoading && <LoadingIndicator message={loadingMessages[loadingMessageIndex]} />}
+
+        {!isLoading && activeTab === 'single' && singleResult && (
+          <SingleResultDisplay result={singleResult} selectedStacks={selectedStacks} />
+        )}
+
+        {!isLoading && activeTab === 'bulk' && bulkResults.length > 0 && (
+          <BulkResultDisplay results={bulkResults} />
+        )}
+
+        {/* 📤 Upload Button Inside Card */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+          <Button
+            component="label"
+            variant="outlined"
+            size="small"
+            startIcon={<CloudUploadIcon fontSize="small" />}
+            sx={{
+              fontWeight: 500,
+              borderRadius: 2,
+              borderColor: '#007A33',
+              color: '#007A33',
+              backgroundColor: '#fff',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.04)',
+              '&:hover': {
+                backgroundColor: '#e6f2ec',
+                borderColor: '#005824',
+                color: '#005824',
+              },
             }}
           >
-            Close
-          </button>
-        </div>
-      </div>
-    </>
+            Upload
+            <input
+              type="file"
+              hidden
+              multiple={activeTab === 'bulk'}
+              onChange={(e) => {
+                if (e.target.files) {
+                  handleUpload(e.target.files, activeTab);
+                }
+              }}
+            />
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

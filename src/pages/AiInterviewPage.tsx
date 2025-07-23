@@ -5,14 +5,14 @@ import {
   CardContent,
   Typography,
   CircularProgress,
+  Box,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { addAnswer } from '../redux/interviewSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addAnswer, setCandidateEmail } from '../redux/interviewSlice';
 import { evaluateInterview } from '../services/evaluate';
 import useAudioToText from '../hooks/useAudioToText';
 import { useSpeechSynthesizer } from '../hooks/useSpeechSynthesizer';
 import { useRandomQuestions } from '../hooks/useRandomQuestions';
-
 import reactQuestions from '../data/question_answer/react.json';
 import jsQuestions from '../data/question_answer/js.json';
 import nodejsQuestions from '../data/question_answer/nodejs.json';
@@ -38,7 +38,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   onReadQuestion,
   onStartInterview,
   loading,
-  imageReady
+  imageReady,
 }) => {
   const dispatch = useDispatch();
   const [started, setStarted] = useState(false);
@@ -48,6 +48,8 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   const [silentTimer, setSilentTimer] = useState<NodeJS.Timeout | null>(null);
   const [codingTimer, setCodingTimer] = useState<NodeJS.Timeout | null>(null);
   const [interviewComplete, setInterviewComplete] = useState(false);
+  const [showTranscription, setShowTranscription] = useState(true); // Default ON
+  const [questionTranscription, setQuestionTranscriptionState] = useState('');
 
   const { speak } = useSpeechSynthesizer();
   const {
@@ -59,7 +61,9 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
     stopListening,
   } = useAudioToText();
 
-  const randomQuestions = useRandomQuestions(
+   const userEmail = useSelector((state: any) => state.authentiction.user?.email);
+
+   const randomQuestions = useRandomQuestions(
     reactQuestions,
     jsQuestions,
     nodejsQuestions
@@ -72,7 +76,10 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   ];
 
   useEffect(() => {
-    if (interviewComplete) evaluateInterview();
+    if (interviewComplete){
+       dispatch(setCandidateEmail(userEmail));
+       evaluateInterview();
+    }
   }, [interviewComplete]);
 
   useEffect(() => {
@@ -89,14 +96,20 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   useEffect(() => {
     if (!started || !imageReady) return;
 
+    // When a new question is asked, update the question transcription
     const runInteraction = (text: string) => {
-      resetTranscript();
-      onReadQuestion?.(text); // Trigger lip-sync immediately
+      // Trigger lipsync and transcription immediately
+      setQuestionTranscriptionState(text);
+      onReadQuestion?.(text);
+
+      // Delay only the voice (speak) so lipsync and voice start together
       setTimeout(() => {
-        speak(text); // Trigger voice after 3 seconds
-      }, 3000);
-      startListening();
-      isCodingQuestion() ? startCodingTimer() : resetSilentTimer();
+        speak(text, () => {
+          resetTranscript();
+          startListening();
+          isCodingQuestion() ? startCodingTimer() : resetSilentTimer();
+        });
+      }, 1000); // Delay voice by 1 second (adjust as needed)
     };
 
     if (phase === 'smalltalk') {
@@ -107,7 +120,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
       }
       const text = smallTalks[currentIndex];
       setQuestion(text);
-      runInteraction(text); // <--- No delay, instant trigger
+      runInteraction(text);
     }
 
     if (phase === 'interview') {
@@ -119,7 +132,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
       const q = interviewQuestions[currentIndex];
       const text = typeof q === 'string' ? q : q.question;
       setQuestion(q);
-      runInteraction(text); // <--- No delay, instant trigger
+      runInteraction(text);
     }
   }, [started, currentIndex, phase, imageReady]);
 
@@ -187,17 +200,33 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
         background: 'linear-gradient(180deg, #f9fbfd 0%, #f1f5f9 100%)',
         p: 4,
         boxShadow: '0px 4px 16px rgba(0,0,0,0.05)',
+        maxWidth: 600,
+        mx: 'auto',
       }}
     >
       <CardContent>
-        <Typography variant="h5" fontWeight={700} gutterBottom>
-          🧠 AI Interview Assistant
-        </Typography>
+        {/* Centered Title */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Typography variant="h5" fontWeight={700} gutterBottom>
+            🧠 AI Interview Assistant
+          </Typography>
+        </Box>
 
-        {!started ? (
+        {/* Buttons row: left and right alignment, closer together */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2, // Add gap between buttons
+            mb: 3,
+            flexWrap: 'wrap',
+          }}
+        >
+          {/* Start Interview Button */}
           <Button
             variant="contained"
-            disabled={loading}
+            disabled={started || loading}
             startIcon={
               loading ? <CircularProgress size={18} sx={{ color: '#fff' }} /> : null
             }
@@ -218,6 +247,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
                   ? 'linear-gradient(to right, #aaa 30%, #ddd 90%)'
                   : 'linear-gradient(45deg, #1976D2 30%, #2196F3 90%)',
               },
+              minWidth: 160,
             }}
             onClick={async () => {
               await onStartInterview?.();
@@ -226,6 +256,41 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
           >
             {loading ? 'Connecting...' : 'Start Interview'}
           </Button>
+
+          {/* Transcription Toggle or Coding Info Button */}
+          {isCodingQuestion() && !interviewComplete ? (
+            <Button
+              variant="outlined"
+              sx={{
+                fontWeight: 600,
+                borderRadius: 2,
+                minWidth: 160,
+              }}
+              disabled
+            >
+              Hide Answer Transcription
+            </Button>
+          ) : (
+            <Button
+              variant={showTranscription ? "outlined" : "contained"}
+              sx={{
+                fontWeight: 600,
+                borderRadius: 2,
+                minWidth: 160,
+              }}
+              onClick={() => setShowTranscription((prev) => !prev)}
+              disabled={interviewComplete}
+            >
+              {showTranscription ? 'Hide Transcription' : 'Show Transcription'}
+            </Button>
+          )}
+        </Box>
+
+        {/* Interview content */}
+        {!started ? (
+          <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+            Click "Start Interview" to begin your AI-powered interview session.
+          </Typography>
         ) : (
           <>
             {interviewComplete && (
@@ -242,6 +307,30 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
               >
                 ✅ Interview complete. Thank you!
               </Typography>
+            )}
+
+            {/* Show transcription only if interview is not complete and not coding question */}
+            {showTranscription && !interviewComplete && (
+              <Box sx={{ mt: 2, mb: 2 }}>
+                <Typography variant="subtitle2" fontWeight="bold">
+                  Question:
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  {questionTranscription}
+                </Typography>
+                <Typography variant="subtitle2" fontWeight="bold">
+                  Your Answer:
+                </Typography>
+                {isCodingQuestion() ? (
+                  <Typography variant="body2" color="warning.main">
+                    Please open the code editor and submit your code answer.
+                  </Typography>
+                ) : (
+                  <Typography variant="body2">
+                    {transcript}
+                  </Typography>
+                )}
+              </Box>
             )}
           </>
         )}

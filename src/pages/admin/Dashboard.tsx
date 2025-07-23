@@ -105,14 +105,19 @@ export default function InterviewDashboard() {
                 { data: interviewData.map((d) => d.walkIn), label: 'Walk-In', color: '#43a047' },
               ]}
               xAxis={xAxisConfig}
-              width={400}
-              height={300}
+              yAxis={[{
+                valueFormatter: (value: any) => `${Math.round(value / 1000)}k`,
+              }]}
+              width={440}
+              height={400}
               slotProps={{
                 legend: {
                   position: { vertical: 'bottom', horizontal: 'center' },
                 },
               }}
+              
             />
+            *Disclaimer : The data presented is fictional and for demonstration purposes only.
           </Paper>
         </Box>
 
@@ -161,19 +166,17 @@ export default function InterviewDashboard() {
             </Box>
 
             <PieChart
-              series={[
-                {
-                  data: pieData,
-                  innerRadius: 80,
-                  outerRadius: 140,
-                  paddingAngle: 3,
-                  cornerRadius: 4,
-                  cx: 200,
-                  cy: 200,
-                },
-              ]}
-              width={400}
-              height={400}
+              series={[{
+                data: pieData,
+                innerRadius: 120,
+                outerRadius: 200,
+                paddingAngle: 3,
+                cornerRadius: 4,
+                cx: 210,
+                cy: 100,
+              }]}
+              width={420}
+              height={420}
               slotProps={{
                 legend: {
                   position: { vertical: 'middle', horizontal: 'end' },
@@ -181,14 +184,17 @@ export default function InterviewDashboard() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 1,
-                    fontSize: '0.95rem',
+                    fontSize: '0.90rem',
                   },
                 },
               }}
             />
+              *Disclaimer : The data presented is fictional and for demonstration purposes only.
           </Paper>
+         
         </Box>
       </Box>
+     
     </Box>
   );
 }

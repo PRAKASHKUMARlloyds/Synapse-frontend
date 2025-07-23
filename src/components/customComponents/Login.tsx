@@ -3,8 +3,7 @@ import {
   Box,
   Button,
   TextField,
-  Typography,
-  Alert,
+  Typography
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +15,7 @@ import {
   getEmailValidationMessage,
   getPasswordValidationMessage,
 } from '../../helpers/login-validation.ts';
+import { toast } from 'react-toastify';
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,6 @@ export const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [notification, setNotification] = useState<string | null>(null);
 
   const storedRole = useSelector(
     (state: RootState) => state.authentiction.role
@@ -34,7 +33,7 @@ export const Login = () => {
     const passwordError = getPasswordValidationMessage(password);
 
     if (emailError || passwordError) {
-      setNotification(emailError || passwordError);
+      toast.error(emailError || passwordError);
       return;
     }
 
@@ -43,11 +42,11 @@ export const Login = () => {
     );
 
     if (!matchedUser) {
-      setNotification('Invalid email or password');
+      toast.error('Invalid email or password');
       return;
     }
 
-    setNotification(null);
+    toast.success('Login successful 🎉');
 
     dispatch(
       login({
@@ -103,12 +102,6 @@ export const Login = () => {
           Login
         </Typography>
         </div>
-
-        {notification && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {notification}
-          </Alert>
-        )}
 
         <TextField
           label="Email"

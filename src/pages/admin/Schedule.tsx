@@ -18,6 +18,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type RootState } from '../../store';
 import { updateInterviewDate } from '../../redux/interviewScheduleSlice';
 
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 const Schedule: React.FC = () => {
   const dispatch = useDispatch();
   const interviews = useSelector((state: RootState) => state.interviewSchedule.interviews);
@@ -42,115 +46,121 @@ const Schedule: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        width: '100%',
-        background: 'linear-gradient(to bottom right, #f0f4f7, #e3edea)',
-        py: 5,
-        px: { xs: 2, sm: 4, md: 6 }
-      }}
-    >
-      <Typography variant="h4" sx={{ color: '#007A33', fontWeight: 'bold', mb: 2 }}>
-        📅 Interview Schedule
-      </Typography>
-
-      <TextField
-        placeholder="Filter by candidate or position"
-        value={filterText}
-        onChange={(e) => setFilterText(e.target.value)}
-        fullWidth
-        sx={{ mb: 3, backgroundColor: '#fff', borderRadius: 2 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon color="action" />
-            </InputAdornment>
-          )
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          width: '100%',
+          background: 'linear-gradient(to bottom right, #f0f4f7, #e3edea)',
+          py: 5,
+          px: { xs: 2, sm: 4, md: 6 }
         }}
-      />
-
-      <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden', backgroundColor: '#fff' }}>
-        <Typography variant="h6" sx={{ px: 3, pt: 3, pb: 1, fontWeight: 'bold', color: '#333' }}>
-          Interview Schedule Table
+      >
+        <Typography variant="h4" sx={{ color: '#007A33', fontWeight: 'bold', mb: 2 }}>
+          📅 Interview Schedule
         </Typography>
 
-        <TableContainer>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: '#007A33' }}>
-                <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Candidate</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Position</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Scheduled Date</TableCell>
-                <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Experience</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filtered.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4} align="center">
-                    No matching interviews found.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filtered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(({ id, candidate, position, date, experience }, index) => (
-                    <TableRow
-                      key={id}
-                      sx={{
-                        backgroundColor: index % 2 === 0 ? '#f9fbfa' : '#f1f6f5',
-                        '&:hover': { backgroundColor: '#e6f5ec' },
-                        transition: 'background 0.2s ease-in-out'
-                      }}
-                    >
-                      <TableCell>{candidate}</TableCell>
-                      <TableCell>{position}</TableCell>
-                      <TableCell>
-                        <TextField
-                          type="date"
-                          value={date}
-                          size="small"
-                          variant="outlined"
-                          InputLabelProps={{ shrink: true }}
-                          InputProps={{
-                            sx: {
-                              backgroundColor: '#f8fcf9',
-                              borderRadius: 1,
-                              fontSize: '0.9rem',
-                              zIndex: 1
-                            }
-                          }}
-                          onChange={(e) =>
-                            dispatch(updateInterviewDate({ id, date: e.target.value }))
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>{experience}</TableCell>
-                    </TableRow>
-                  ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          count={filtered.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            borderTop: '1px solid #e0e0e0',
-            backgroundColor: '#fafafa',
-            px: 2,
-            display: 'flex',
-            justifyContent: 'flex-end'
+        <TextField
+          placeholder="Filter by candidate or position"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          fullWidth
+          sx={{ mb: 3, backgroundColor: '#fff', borderRadius: 2 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            )
           }}
         />
-      </Paper>
-    </Box>
+
+        <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden', backgroundColor: '#fff' }}>
+          <Typography variant="h6" sx={{ px: 3, pt: 3, pb: 1, fontWeight: 'bold', color: '#333' }}>
+            Interview Schedule Table
+          </Typography>
+
+          <TableContainer>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: '#007A33' }}>
+                  <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Candidate</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Position</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Scheduled Date</TableCell>
+                  <TableCell sx={{ color: '#fff', fontWeight: 'bold' }}>Experience</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filtered.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center">
+                      No matching interviews found.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filtered
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map(({ id, candidate, position, date, experience }, index) => (
+                      <TableRow
+                        key={id}
+                        sx={{
+                          backgroundColor: index % 2 === 0 ? '#f9fbfa' : '#f1f6f5',
+                          '&:hover': { backgroundColor: '#e6f5ec' },
+                          transition: 'background 0.2s ease-in-out'
+                        }}
+                      >
+                        <TableCell>{candidate}</TableCell>
+                        <TableCell>{position}</TableCell>
+                        <TableCell>
+                          <DesktopDatePicker
+                            label="Interview Date"
+                            value={date ? new Date(date) : null}
+                            onChange={(newValue) => {
+                              if (newValue) {
+                                const formatted = newValue.toISOString().slice(0, 10);
+                                dispatch(updateInterviewDate({ id, date: formatted }));
+                              }
+                            }}
+                            slotProps={{
+                              textField: {
+                                size: 'small',
+                                variant: 'outlined',
+                                sx: {
+                                  backgroundColor: '#f8fcf9',
+                                  borderRadius: 1,
+                                  fontSize: '0.9rem',
+                                  zIndex: 1
+                                }
+                              }
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell>{experience}</TableCell>
+                      </TableRow>
+                    ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            count={filtered.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{
+              borderTop: '1px solid #e0e0e0',
+              backgroundColor: '#fafafa',
+              px: 2,
+              display: 'flex',
+              justifyContent: 'flex-end'
+            }}
+          />
+        </Paper>
+      </Box>
+    </LocalizationProvider>
   );
 };
 

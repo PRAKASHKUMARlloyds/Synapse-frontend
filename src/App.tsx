@@ -4,6 +4,7 @@ import { RoutesList } from '../src/components/app/RouteList'; // adjust path as 
 import './App.css';
 import { Provider } from 'react-redux';
 import store from './store';
+ 
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
      <Provider store={store}>
       <BrowserRouter>
         <RoutesList />
+      
       </BrowserRouter>
     </Provider>
 

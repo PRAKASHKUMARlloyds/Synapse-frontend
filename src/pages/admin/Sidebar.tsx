@@ -38,9 +38,9 @@ const Sidebar: React.FC = () => {
 
   const allMenuItems = [
     { text: 'Dashboard', icon: <Dashboard />, path: '/admin/dashboard' },
+    { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
     { text: 'Schedule', icon: <People />, path: '/admin/schedule' },
     { text: 'Feedback', icon: <Feedback />, path: '/admin/feedback' },
-    { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
     { text: 'Logout', icon: <Logout style={{ transform: 'rotate(270deg)' }} />, path: '/' },
   ];
 

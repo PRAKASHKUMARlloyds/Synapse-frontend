@@ -35,6 +35,7 @@
     "react-router-dom": "^7.6.3",
     "react-select": "^5.10.2",
     "react-speech-recognition": "^4.0.1",
+    "react-toastify": "^11.0.5",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {

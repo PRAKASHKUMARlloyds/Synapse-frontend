@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store.ts';
 
 import { TechStackSelector } from '../components/resumeComponents/TechStackSelector';
-import { ResumeUploader } from '../components/resumeComponents/ResumeUploader';
 import { analyzeResumes } from '../services/analyze-resumes.ts';
 import { UploadModeTab } from '../components/resumeComponents/UploadModeTab';
 import { UploadedFilesPreview } from '../components/resumeComponents/UploadedFilesPreview';
@@ -87,7 +86,13 @@ const ResumeAnalysis = () => {
     }, 1500);
 
     if (activeTab === 'single' && singleFile) {
-      const res = await analyzeResumes({ 0: singleFile, length: 1 }, selectedStacks);
+       const fileList: FileList = {
+          0: singleFile,
+          length: 1,
+          item: (index: number) => (index === 0 ? singleFile : null),
+        } as unknown as FileList;
+
+      const res = await analyzeResumes(fileList, selectedStacks);
       const result = res[0];
       console.log(
         'REsume results' +

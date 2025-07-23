@@ -3,18 +3,16 @@ import { RoutesList } from '../src/components/app/RouteList'; // adjust path as 
 import './App.css';
 import { Provider } from 'react-redux';
 import store from './store';
- 
-
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
      <Provider store={store}>
       <BrowserRouter>
         <RoutesList />
-      
       </BrowserRouter>
+      <ToastContainer />
     </Provider>
-
   );
 }
 

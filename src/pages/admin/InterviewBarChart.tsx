@@ -12,8 +12,6 @@ import { interpolateObject } from '@mui/x-charts-vendor/d3-interpolate';
 import type { BarLabelProps } from '@mui/x-charts/BarChart';
 
 
-
-
 const rawData=[{year:'2024',sel:2350,rej:19650},{year:'2025',sel:1500,rej:16500}]
 const allYears =rawData.map((d) => parseInt(d.year));
 const minYear = Math.min(...allYears);
@@ -41,7 +39,7 @@ function CustomLegend() {
 );}
 
 export const InterviewStatsPanel: React.FC = () => {const [yearRange, setYearRange] = React.useState<[number, number]> ([minYear, maxYear]);
-const handleRangeChange = (event: Event, newValue: number | number[]) => {
+const handleRangeChange = (_event: Event, newValue: number | number[]) => {
     setYearRange(newValue as [number, number]);
 };
 

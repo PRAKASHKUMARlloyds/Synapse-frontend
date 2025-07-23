@@ -17,9 +17,6 @@ import { SingleResultDisplay } from '../components/resumeComponents/SingleResult
 import { BulkResultDisplay } from '../components/resumeComponents/BulkResultDisplay';
 
 import {
-  setSkills,
-  setResumeScore,
-  setStatus,
   setCandidateData,
 } from '../redux/resumeAnalysisSlice.tsx';
 import { addInterview } from '../redux/interviewScheduleSlice.tsx';
@@ -92,10 +89,30 @@ const ResumeAnalysis = () => {
     }, 1500);
 
     if (activeTab === 'single' && singleFile) {
+
       const dt = new DataTransfer();
       if (singleFile) dt.items.add(singleFile);
       const res = await analyzeResumes(dt.files, selectedStacks);
       const result = res[0];
+
+      const fileList: FileList = {
+          0: singleFile,
+          length: 1,
+          item: (index: number) => (index === 0 ? singleFile : null),
+        } as unknown as FileList;
+
+      const res = await analyzeResumes(fileList, selectedStacks);
+      const result = res[0];
+      console.log(
+        'REsume results' +
+          result.skills +
+          'Details:\n' +
+          result.details +
+          result.name +
+          result.relevance
+      );
+   
+
       if (resumeData) {
         dispatch(
           setCandidateData({

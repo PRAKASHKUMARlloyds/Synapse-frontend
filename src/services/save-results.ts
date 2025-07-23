@@ -16,7 +16,7 @@ export async function sendEvaluationToBackend(data: {
   status: 'pass' | 'fail';
 }) {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/save-info`, data, {
+    const response = await axios.post(`${API_BASE_URL}/api/save-results`, data, {
       headers: {
         'Content-Type': 'application/json',
       },

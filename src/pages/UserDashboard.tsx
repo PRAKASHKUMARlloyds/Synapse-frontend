@@ -23,6 +23,7 @@ export default function UserDashboard() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isInterviewLoading, setIsInterviewLoading] = useState(false);
   const [imageReady, setImageReady] = useState(false);
+  const [showTranscription, setShowTranscription] = useState(false);
 
   const {
     streamVideoRef,

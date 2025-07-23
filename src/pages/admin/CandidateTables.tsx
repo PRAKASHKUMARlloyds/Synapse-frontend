@@ -113,18 +113,11 @@ const Candidates: React.FC = () => {
             onChange={handleChange}
             fullWidth
           />
-          <TextField
-            label="Skills (comma-separated)"
-            name="skills"
-            value={form.skills}
-            onChange={handleChange}
-            fullWidth
-          />
         </Box>
 
         <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
           <Button variant="outlined" color="primary" onClick={handleUploadResume}>
-            Upload Resume
+            Analyze Resume
           </Button>
           <Button variant="contained" sx={{ backgroundColor: '#007A33' }} onClick={handleSubmit}>
             Submit

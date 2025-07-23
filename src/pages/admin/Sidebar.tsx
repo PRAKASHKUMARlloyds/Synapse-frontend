@@ -12,16 +12,12 @@ import {
   Divider,
   Box,
 } from '@mui/material';
-<<<<<<< HEAD
-import { Dashboard, People, Feedback } from '@mui/icons-material';
-=======
 import {
   Dashboard,
   People,
   Feedback,
   Logout
 } from '@mui/icons-material';
->>>>>>> 83edde1cfa3d80f57cfe316c107595b096d56124
 import { useLocation, Link as RouterLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 // Update the import path below if your store file is located elsewhere, e.g. '../../store' or '../../app/store'
@@ -53,24 +49,17 @@ const Sidebar: React.FC = () => {
     { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
     { text: 'Schedule', icon: <People />, path: '/admin/schedule' },
     { text: 'Feedback', icon: <Feedback />, path: '/admin/feedback' },
-<<<<<<< HEAD
-=======
     { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
     { text: "Logout", icon: <Logout style={{ transform: 'rotate(270deg)' }}/>, path: '/'}
->>>>>>> 83edde1cfa3d80f57cfe316c107595b096d56124
   ];
 
   const menuItems =
     role === Role.HR
       ? allMenuItems
       : role === Role.Manager
-<<<<<<< HEAD
-        ? allMenuItems.filter((item) => ['Dashboard', 'Schedule', 'Feedback'].includes(item.text))
-=======
         ? allMenuItems.filter(item =>
             ['Dashboard','Schedule', 'Feedback', 'Logout'].includes(item.text)
           )
->>>>>>> 83edde1cfa3d80f57cfe316c107595b096d56124
         : [];
 
   return (

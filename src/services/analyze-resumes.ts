@@ -39,23 +39,22 @@ async function analyzeOne(file: File, techStacks: string[]): Promise<AnalysisRes
   const ai = new GoogleGenAI({ apiKey });
 
   // upload
-const blob = new Blob([file], { type: file.type || 'application/pdf' });
-const uploaded = await ai.files.upload({
-  file: blob,
-  config: { displayName: file.name },
-});
+  const blob = new Blob([file], { type: file.type || 'application/pdf' });
+  const uploaded = await ai.files.upload({
+    file: blob,
+    config: { displayName: file.name },
+  });
 
-if (!uploaded.name) {
-  throw new Error('Uploaded file does not have a valid name.');
-}
+  if (!uploaded.name) {
+    throw new Error('Uploaded file does not have a valid name.');
+  }
 
-// poll until ready
-let info = await ai.files.get({ name: uploaded.name });
-while (info.state === 'PROCESSING') {
-  await new Promise((r) => setTimeout(r, 2000));
-  info = await ai.files.get({ name: uploaded.name });
-}
-
+  // poll until ready
+  let info = await ai.files.get({ name: uploaded.name });
+  while (info.state === 'PROCESSING') {
+    await new Promise((r) => setTimeout(r, 2000));
+    info = await ai.files.get({ name: uploaded.name });
+  }
 
   if (info.state === 'FAILED') {
     throw new Error('Resume upload/processing failed');
@@ -68,7 +67,7 @@ You are a JSON-only generator. Never prepend or append any text—output raw JSO
 Analyze this resume for the following tech stacks: ${techStacks.join(', ')}.
 
 1. Extract relevant experiences and list matching skills.
-2. Rate proficiency for each tech from 1 to 5.
+2. Rate proficiency for each tech from 1 to 10.
 3. Compute an overall relevancy percentage (0–100).
 4. For each tech, identify positive statements and negative statements.
 
@@ -123,8 +122,7 @@ export async function analyzeResumes(
 
     const positives = technologies.flatMap((t) => t.positiveStatements);
 
-    const avgProf =
-      technologies.reduce((sum, t) => sum + t.proficiency, 0) / technologies.length;
+    const avgProf = technologies.reduce((sum, t) => sum + t.proficiency, 0) / technologies.length;
     const rating = Math.round((avgProf / 5) * 10);
 
     out.push({

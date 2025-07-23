@@ -23,13 +23,13 @@ export const SingleResultDisplay = ({ result, selectedStacks }: TechStack) => (
         return (
           <Box key={stack} p={2} border="1px solid #ccc" borderRadius={2}>
             <Typography variant="subtitle1">
-              <strong>{stack}</strong> {stars} ({data.proficiency}/5)
+              <strong>{stack}</strong> {stars} ({data.proficiency}/10)
             </Typography>
-            <ul style={{ marginLeft: '1.2rem' }}>
+            <ol style={{ margin: 0, paddingLeft: '1.5rem', textAlign: 'left' }}>
               {data.positiveStatements.map((point: string, idx: number) => (
                 <li key={idx}>{point}</li>
               ))}
-            </ul>
+            </ol>
           </Box>
         );
       })}

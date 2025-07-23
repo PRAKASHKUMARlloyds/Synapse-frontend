@@ -13,6 +13,7 @@ import ChatInterface from '../pages/ChatInterface';
 import { AiInterviewPage } from './AiInterviewPage';
 import CodeEditor from '../components/editorComponents/CodeEditor';
 import { useStreamingClient } from '../components/streaming/useStreamingClient';
+import LogoutButton from '../features/logout/LogoutButton';
 
 export default function UserDashboard() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -97,6 +98,10 @@ export default function UserDashboard() {
   };
 
   return (
+    <Box>
+      <nav>
+        <LogoutButton/>
+      </nav>
     <Box sx={{ height: '100vh', bgcolor: '#f2f6fc', overflowY: 'auto' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Typography variant="h4" fontWeight={600} gutterBottom>
@@ -222,6 +227,7 @@ export default function UserDashboard() {
           </Box>
         )}
       </Container>
+    </Box>
     </Box>
   );
 }

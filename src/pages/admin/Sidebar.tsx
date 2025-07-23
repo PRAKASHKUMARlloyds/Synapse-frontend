@@ -25,7 +25,6 @@ import type { RootState } from '../../store';
 // Update the path below to the correct location of authenticationSlice in your project
 import { Role } from '../../redux/authenticationSlice';
 import { logout } from '../../redux/authenticationSlice';
-import path from 'path';
 
 const drawerWidth = 240;
 

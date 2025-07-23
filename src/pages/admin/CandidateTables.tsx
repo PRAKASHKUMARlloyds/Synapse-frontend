@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import {
   Box,
   Typography,
@@ -14,9 +12,16 @@ import {
   TableRow,
   Paper,
   Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+
 import type { RootState } from '../../store';
 import { setEmailId, setName } from '../../redux/resumeAnalysisSlice';
+import ResumeAnalysis from '../ResumeAnalysis';
 
 type Candidate = {
   name: string;
@@ -51,20 +56,19 @@ const initialCandidates: Candidate[] = [
 ];
 
 const Candidates: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const resumeData = useSelector((state: RootState) => state.resumeAnalysis);
 
   const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
   const [form, setForm] = useState({ name: '', email: '', skills: '' });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleUploadResume = () => {
     if (form.name && form.email) {
       dispatch(setName(form.name));
       dispatch(setEmailId(form.email));
-      console.log(form.email && form.name);
+      setIsModalOpen(true);
     }
-    navigate('/admin/analyse');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -91,6 +95,7 @@ const Candidates: React.FC = () => {
     };
 
     setCandidates((prev) => [...prev, newCandidate]);
+    setIsModalOpen(false); // Close the modal
   };
 
   return (
@@ -164,6 +169,21 @@ const Candidates: React.FC = () => {
           </TableBody>
         </Table>
       </Paper>
+
+      {/* Modal Popup for ResumeAnalysis */}
+      <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} fullWidth maxWidth="md">
+        <DialogTitle
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
+          Resume Analyzer
+          <IconButton onClick={() => setIsModalOpen(false)}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <ResumeAnalysis />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

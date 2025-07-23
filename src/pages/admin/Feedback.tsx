@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Typography, Paper, Table, TableContainer,
-  TableHead, TableRow, TableCell, TableBody, Chip
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from '@mui/material';
 import { getCandidateResults } from '../../services/retrieve-results';
 
@@ -35,9 +42,9 @@ const Feedback: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const s = status.toLowerCase();
-    if (s === 'pass') return '#4caf50';       // green
+    if (s === 'pass') return '#4caf50'; // green
     if (s === 'fail' || s === 'failed' || s === 'rejected') return '#ff9800'; // yellow
-    return '#f44336';                           // red fallback
+    return '#f44336'; // red fallback
   };
 
   const StatusCircle = ({ status }: { status: string }) => (
@@ -70,10 +77,7 @@ const Feedback: React.FC = () => {
         background: '#f9f9f9',
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{ mb: 4, fontWeight: 'bold', color: '#007A33' }}
-      >
+      <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', color: '#007A33' }}>
         📋 HR Portal - Interview Evaluations
       </Typography>
 

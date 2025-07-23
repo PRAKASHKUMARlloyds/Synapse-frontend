@@ -12,12 +12,7 @@ import {
   Divider,
   Box,
 } from '@mui/material';
-import {
-  Dashboard,
-  People,
-  Feedback,
-  Logout
-} from '@mui/icons-material';
+import { Dashboard, People, Feedback, Logout } from '@mui/icons-material';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 // Update the import path below if your store file is located elsewhere, e.g. '../../store' or '../../app/store'
@@ -29,15 +24,12 @@ import { logout } from '../../redux/authenticationSlice';
 const drawerWidth = 240;
 
 const Sidebar: React.FC = () => {
-
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
   };
-  const handleOnClick = () => {
-
-  };
+  const handleOnClick = () => {};
 
   const location = useLocation();
 
@@ -46,19 +38,18 @@ const Sidebar: React.FC = () => {
 
   const allMenuItems = [
     { text: 'Dashboard', icon: <Dashboard />, path: '/admin/dashboard' },
-    { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
     { text: 'Schedule', icon: <People />, path: '/admin/schedule' },
     { text: 'Feedback', icon: <Feedback />, path: '/admin/feedback' },
     { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
-    { text: "Logout", icon: <Logout style={{ transform: 'rotate(270deg)' }}/>, path: '/'}
+    { text: 'Logout', icon: <Logout style={{ transform: 'rotate(270deg)' }} />, path: '/' },
   ];
 
   const menuItems =
     role === Role.HR
       ? allMenuItems
       : role === Role.Manager
-        ? allMenuItems.filter(item =>
-            ['Dashboard','Schedule', 'Feedback', 'Logout'].includes(item.text)
+        ? allMenuItems.filter((item) =>
+            ['Dashboard', 'Schedule', 'Feedback', 'Logout'].includes(item.text)
           )
         : [];
 
@@ -94,7 +85,7 @@ const Sidebar: React.FC = () => {
             <ListItemButton
               component={RouterLink}
               to={path}
-              onClick={(text === "Logout") ? handleLogout : handleOnClick}
+              onClick={text === 'Logout' ? handleLogout : handleOnClick}
               selected={location.pathname === path}
               sx={{
                 color: '#fff',

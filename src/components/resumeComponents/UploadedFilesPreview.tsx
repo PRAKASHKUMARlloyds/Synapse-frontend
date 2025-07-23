@@ -26,11 +26,11 @@ export const UploadedFilesPreview = ({
           📄 Uploaded {bulkFiles.length} file
           {bulkFiles.length > 1 ? 's' : ''}:
         </Typography>
-        <ul style={{ marginTop: '0.3rem', marginLeft: '1rem' }}>
+        <ol style={{ margin: 0, paddingLeft: '1.5rem', textAlign: 'left' }}>
           {Array.from(bulkFiles).map((file, idx) => (
             <li key={idx}>{file.name}</li>
           ))}
-        </ul>
+        </ol>
       </Box>
     );
   }

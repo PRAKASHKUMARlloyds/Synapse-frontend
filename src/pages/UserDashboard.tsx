@@ -22,6 +22,7 @@ export default function UserDashboard() {
   const [questionReceivedAt, setQuestionReceivedAt] = useState<number>(0);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isInterviewLoading, setIsInterviewLoading] = useState(false);
+  const [imageReady, setImageReady] = useState(false);
 
   const {
     streamVideoRef,
@@ -142,6 +143,7 @@ export default function UserDashboard() {
               autoPlay
               muted
               playsInline
+              onLoadedData={() => setImageReady(true)}
               style={{
                 borderRadius: 4,
                 width: '100%',
@@ -195,6 +197,7 @@ export default function UserDashboard() {
                 onReadQuestion={handleReadQuestion}
                 onStartInterview={handleStartInterview}
                 loading={isInterviewLoading}
+                imageReady={imageReady}
               />
               {isChatOpen && (
                 <Box sx={{ mt: 3 }}>

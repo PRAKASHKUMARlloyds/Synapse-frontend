@@ -30,6 +30,7 @@ interface AiInterviewPageProps {
   onReadQuestion?: (text: string) => void;
   onStartInterview?: () => Promise<void>;
   loading?: boolean;
+  imageReady?: boolean;
 }
 
 export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
@@ -37,6 +38,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   onReadQuestion,
   onStartInterview,
   loading,
+  imageReady
 }) => {
   const dispatch = useDispatch();
   const [started, setStarted] = useState(false);
@@ -85,12 +87,14 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   }, [submittedCode]);
 
   useEffect(() => {
-    if (!started) return;
+    if (!started || !imageReady) return;
 
     const runInteraction = (text: string) => {
       resetTranscript();
-      speak(text);
-      onReadQuestion?.(text);
+      onReadQuestion?.(text); // Trigger lip-sync immediately
+      setTimeout(() => {
+        speak(text); // Trigger voice after 3 seconds
+      }, 3000);
       startListening();
       isCodingQuestion() ? startCodingTimer() : resetSilentTimer();
     };
@@ -101,10 +105,9 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
         setCurrentIndex(0);
         return;
       }
-
       const text = smallTalks[currentIndex];
       setQuestion(text);
-      runInteraction(text);
+      runInteraction(text); // <--- No delay, instant trigger
     }
 
     if (phase === 'interview') {
@@ -113,13 +116,12 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
         setInterviewComplete(true);
         return;
       }
-
       const q = interviewQuestions[currentIndex];
       const text = typeof q === 'string' ? q : q.question;
       setQuestion(q);
-      runInteraction(text);
+      runInteraction(text); // <--- No delay, instant trigger
     }
-  }, [started, currentIndex, phase]);
+  }, [started, currentIndex, phase, imageReady]);
 
   useEffect(() => {
     if (listening && transcript) resetSilentTimer();

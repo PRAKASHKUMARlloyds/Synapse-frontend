@@ -1,6 +1,6 @@
 import { Typography, Box } from '@mui/material';
 
-interface Props {
+interface UploadedFilesPreviewProps {
   activeTab: 'single' | 'bulk';
   singleFile: File | null;
   bulkFiles: FileList | null;
@@ -10,7 +10,7 @@ export const UploadedFilesPreview = ({
   activeTab,
   singleFile,
   bulkFiles,
-}: Props) => {
+}: UploadedFilesPreviewProps) => {
   if (activeTab === 'single' && singleFile) {
     return (
       <Typography variant="body2" mt={1}>

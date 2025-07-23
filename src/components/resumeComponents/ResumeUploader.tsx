@@ -1,11 +1,11 @@
 import { Button, Stack } from '@mui/material';
 
-interface Props {
+interface ResumeUploaderProps {
   onUpload: (files: FileList) => void;
   mode: 'single' | 'bulk';
 }
 
-export const ResumeUploader = ({ onUpload, mode }: Props) => {
+export const ResumeUploader = ({ onUpload, mode }: ResumeUploaderProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;

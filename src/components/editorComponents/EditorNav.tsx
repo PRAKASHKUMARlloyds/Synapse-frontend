@@ -1,10 +1,9 @@
-import React from 'react';
 import type { FC } from 'react';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import type {SelectChangeEvent} from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import Container from '@mui/material/Container';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
@@ -12,6 +11,7 @@ import { IconButton } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import './CSS/editornav.css';
+import { toast } from 'react-toastify';
 
 interface EditorNavProps {
   code: string;
@@ -35,6 +35,12 @@ const EditorNav: FC<EditorNavProps> = ({
   const handleCodeSubmit = () => {
     console.log('Submitting code:', code);
     onSubmit();
+
+    // ✅ Show toast after submission
+    toast.success('Code submitted successfully!', {
+      position: 'top-right',
+      autoClose: 3000,
+    });
   };
 
   const handleSelectChange = (event: SelectChangeEvent): void => {
@@ -113,7 +119,13 @@ const EditorNav: FC<EditorNavProps> = ({
               Submit
             </Button>
           ) : (
-            <Button id="submit-btn" variant="contained" size="medium" color="success" onClick={handleCodeSubmit}>
+            <Button
+              id="submit-btn"
+              variant="contained"
+              size="medium"
+              color="success"
+              onClick={handleCodeSubmit}
+            >
               Submit
             </Button>
           )}

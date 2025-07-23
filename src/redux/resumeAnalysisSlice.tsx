@@ -1,92 +1,55 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export type ResumeStatus = 'pending' | 'shortlisted' | 'rejected';
-
-export interface ResumeAnalysisResult {
+interface ResumeAnalysisResult {
   name: string;
-  email: string;
+  emailId: string;
   skills: string[];
   resumeScore: number;
-  status: ResumeStatus;
+  status: 'Passed' | 'Rejected' | '';
 }
 
-interface ResumeAnalysisState {
-  result: ResumeAnalysisResult | null;
-  loading: boolean;
-  error: string | null;
-}
-
-const initialState: ResumeAnalysisState = {
-  result: null,
-  loading: false,
-  error: null,
+const initialState: ResumeAnalysisResult = {
+  name: '',
+  emailId: '',
+  skills: [],
+  resumeScore: 0,
+  status: '',
 };
-
 const resumeAnalysisSlice = createSlice({
   name: 'resumeAnalysis',
   initialState,
   reducers: {
-    // Equivalent to "login" from authentication
-    setResumeAnalysis: (state, action: PayloadAction<ResumeAnalysisResult>) => {
-      state.result = action.payload;
-      state.loading = false;
-      state.error = null;
+    setName: (state, action: PayloadAction<string>) => {
+      state.name = action.payload;
     },
-    // Individual fields (like update name/email)
-    updateName: (state, action: PayloadAction<string>) => {
-      if (!state.result) {
-        state.result = { name: '', email: '', skills: [], resumeScore: 0, status: 'pending' };
-      }
-      state.result.name = action.payload;
+    setEmailId: (state, action: PayloadAction<string>) => {
+      state.emailId = action.payload;
     },
-    updateEmail: (state, action: PayloadAction<string>) => {
-      if (!state.result) {
-        state.result = { name: '', email: '', skills: [], resumeScore: 0, status: 'pending' };
-      }
-      state.result.email = action.payload;
+    setSkills: (state, action: PayloadAction<string[]>) => {
+      state.skills = action.payload;
     },
-    updateScore: (state, action: PayloadAction<number>) => {
-      if (state.result) {
-        state.result.resumeScore = action.payload;
-      }
+    setResumeScore: (state, action: PayloadAction<number>) => {
+      state.resumeScore = action.payload;
     },
-    updateSkills: (state, action: PayloadAction<string[]>) => {
-      if (state.result) {
-        state.result.skills = action.payload;
-      }
+    setStatus: (state, action: PayloadAction<ResumeAnalysisResult['status']>) => {
+      state.status = action.payload;
     },
-    updateStatus: (state, action: PayloadAction<ResumeStatus>) => {
-      if (state.result) {
-        state.result.status = action.payload;
-      }
+    setCandidateData: (state, action: PayloadAction<ResumeAnalysisResult>) => {
+      return { ...state, ...action.payload };
     },
-    // Equivalent to "logout"
-    clearResumeAnalysis: (state) => {
-      state.result = null;
-      state.loading = false;
-      state.error = null;
-    },
-    setAnalysisLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
-    setAnalysisError: (state, action: PayloadAction<string>) => {
-      state.error = action.payload;
-      state.loading = false;
-    },
+    resetresumeAnalysis: () => initialState,
   },
 });
 
 export const {
-  setResumeAnalysis,
-  updateName,
-  updateEmail,
-  updateScore,
-  updateSkills,
-  updateStatus,
-  clearResumeAnalysis,
-  setAnalysisLoading,
-  setAnalysisError,
+  setName,
+  setEmailId,
+  setSkills,
+  setResumeScore,
+  setStatus,
+  setCandidateData,
+  resetresumeAnalysis,
 } = resumeAnalysisSlice.actions;
 
 export default resumeAnalysisSlice.reducer;

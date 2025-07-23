@@ -1,8 +1,15 @@
 import {
-  Table,TableBody,TableCell,TableHead,TableRow,Paper,List,ListItem
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Paper,
+  List,
+  ListItem,
 } from '@mui/material';
 
-interface ResumeResult {
+interface BulkResultDisplayProps {
   name: string;
   relevance: number;
   positives: string[];
@@ -10,8 +17,8 @@ interface ResumeResult {
 }
 
 interface Props {
-  results: ResumeResult[];
-  onSelect: (result: ResumeResult) => void;
+  results: BulkResultDisplayProps[];
+  onSelect: (result: BulkResultDisplayProps) => void;
 }
 
 export const ResumeTable = ({ results, onSelect }: Props) => (
@@ -26,12 +33,8 @@ export const ResumeTable = ({ results, onSelect }: Props) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {results.map(res => (
-          <TableRow
-            key={res.name}
-            onClick={() => onSelect(res)}
-            hover
-          >
+        {results.map((res) => (
+          <TableRow key={res.name} onClick={() => onSelect(res)} hover>
             <TableCell>{res.name}</TableCell>
             <TableCell>{res.relevance}</TableCell>
             <TableCell>

@@ -12,11 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store.ts';
 import {
-  setResumeAnalysis,
-  updateSkills,
-  updateScore,
-  updateStatus,
-} from '../redux/resumeAnalysisSlice';
+  setCandidateData,
+} from '../redux/resumeAnalysisSlice.tsx';
 
 const loadingMessages = [
   '🚀 Launching resume into orbit...',
@@ -29,8 +26,8 @@ const loadingMessages = [
 const ResumeAnalysis = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const resumeData = useSelector((state: RootState) => state.resumeAnalysis.result);
+  const { name, emailId } = useSelector((state: RootState) => state.resumeAnalysis);
+  const resumeData = useSelector((state: RootState) => state.resumeAnalysis);
 
   const [selectedStacks, setSelectedStacks] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<'single' | 'bulk'>('single');
@@ -88,18 +85,42 @@ const ResumeAnalysis = () => {
     }, 1500);
 
     if (activeTab === 'single' && singleFile) {
-      const res = await analyzeResumes({ 0: singleFile, length: 1 }, selectedStacks);
+      const fileList: FileList = {
+          0: singleFile,
+          length: 1,
+          item: (index: number) => (index === 0 ? singleFile : null),
+        } as unknown as FileList;
+
+      const res = await analyzeResumes(fileList, selectedStacks);
       const result = res[0];
+      console.log(
+        'REsume results' +
+          result.skills +
+          'Details:\n' +
+          result.details +
+          result.name +
+          result.relevance
+      );
+   
       if (resumeData) {
         dispatch(
-          setResumeAnalysis({
-            name: resumeData.name,
-            email: resumeData.email,
-            skills: result.skills,
-            resumeScore: result.resumeScore,
-            status: result.status,
+          setCandidateData({
+            name,
+            emailId,
+            skills: selectedStacks,
+            resumeScore: result.relevance,
+            status: result.relevance > 80 ? 'Rejected' : 'Passed',
           })
         );
+        //  dispatch(
+        // setResumeAnalysis({
+        //   name: resumeData.name,
+        //   email: resumeData.email,
+        //   skills: result.skills,
+        //   resumeScore: result.resumeScore,
+        //   status: result.status,
+        // })
+        // );
       }
 
       setSingleResult(result);

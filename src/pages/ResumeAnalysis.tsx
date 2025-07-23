@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Container, Typography, Paper, Box, Divider, IconButton, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import RefreshIcon from '@mui/icons-material/Refresh'; // 🔄 import refresh icon
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store.ts';
 
@@ -27,7 +26,6 @@ const loadingMessages = [
 ];
 
 const ResumeAnalysis = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { name, emailId } = useSelector((state: RootState) => state.resumeAnalysis);
   const resumeData = useSelector((state: RootState) => state.resumeAnalysis);
@@ -45,13 +43,9 @@ const ResumeAnalysis = () => {
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleClose = () => {
-    setSingleFile(null);
-    setSingleResult(null);
-    setBulkFiles(null);
-    setBulkResults([]);
-    setErrorMessage('');
-    navigate('/admin/candidates');
+  const handleReload = () => {
+    // Full page reload
+    window.location.reload();
   };
 
   const handleStackSelect = (stack: string) => {
@@ -86,22 +80,14 @@ const ResumeAnalysis = () => {
     }, 1500);
 
     if (activeTab === 'single' && singleFile) {
-       const fileList: FileList = {
-          0: singleFile,
-          length: 1,
-          item: (index: number) => (index === 0 ? singleFile : null),
-        } as unknown as FileList;
+      const fileList: FileList = {
+        0: singleFile,
+        length: 1,
+        item: (index: number) => (index === 0 ? singleFile : null),
+      } as unknown as FileList;
 
       const res = await analyzeResumes(fileList, selectedStacks);
       const result = res[0];
-      console.log(
-        'REsume results' +
-          result.skills +
-          'Details:\n' +
-          result.details +
-          result.name +
-          result.relevance
-      );
 
       if (resumeData) {
         dispatch(
@@ -124,6 +110,7 @@ const ResumeAnalysis = () => {
           })
         );
       }
+
       setSingleResult(result);
     } else if (activeTab === 'bulk' && bulkFiles) {
       const res = await analyzeResumes(bulkFiles, selectedStacks);
@@ -138,10 +125,10 @@ const ResumeAnalysis = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 4, position: 'relative' }}>
-      {/* ❌ Top-right close icon */}
+      {/* 🔄 Reload button */}
       <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
         <IconButton
-          onClick={handleClose}
+          onClick={handleReload}
           sx={{
             backgroundColor: 'white',
             color: '#007A33',
@@ -150,17 +137,15 @@ const ResumeAnalysis = () => {
             '&:hover': { backgroundColor: '#f0f0f0' },
           }}
         >
-          <CloseIcon />
+          <RefreshIcon />
         </IconButton>
       </Box>
 
-      {/* 📄 Title */}
       <Typography variant="h4" fontWeight={700} textAlign="center" gutterBottom>
         📄 Resume Analyzer
       </Typography>
       <Divider sx={{ mb: 4 }} />
 
-      {/* 🎨 Analyzer Card */}
       <Paper
         elevation={4}
         sx={{
@@ -195,7 +180,6 @@ const ResumeAnalysis = () => {
           <BulkResultDisplay results={bulkResults} />
         )}
 
-        {/* 📤 Upload Button Inside Card */}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
           <Button
             component="label"

@@ -3,8 +3,7 @@ import {
   Box,
   Button,
   TextField,
-  Typography,
-  Alert,
+  Typography
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +23,6 @@ export const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [notification, setNotification] = useState<string | null>(null);
 
   const storedRole = useSelector(
     (state: RootState) => state.authentiction.role

@@ -16,9 +16,7 @@ import { LoadingIndicator } from '../components/resumeComponents/LoadingIndicato
 import { SingleResultDisplay } from '../components/resumeComponents/SingleResultDisplay';
 import { BulkResultDisplay } from '../components/resumeComponents/BulkResultDisplay';
 
-import {
-  setCandidateData,
-} from '../redux/resumeAnalysisSlice.tsx';
+import { setCandidateData } from '../redux/resumeAnalysisSlice.tsx';
 import { addInterview } from '../redux/interviewScheduleSlice.tsx';
 
 const loadingMessages = [
@@ -89,19 +87,7 @@ const ResumeAnalysis = () => {
     }, 1500);
 
     if (activeTab === 'single' && singleFile) {
-
-      const dt = new DataTransfer();
-      if (singleFile) dt.items.add(singleFile);
-      const res = await analyzeResumes(dt.files, selectedStacks);
-      const result = res[0];
-
-      const fileList: FileList = {
-          0: singleFile,
-          length: 1,
-          item: (index: number) => (index === 0 ? singleFile : null),
-        } as unknown as FileList;
-
-      const res = await analyzeResumes(fileList, selectedStacks);
+      const res = await analyzeResumes({ 0: singleFile, length: 1 }, selectedStacks);
       const result = res[0];
       console.log(
         'REsume results' +
@@ -111,7 +97,6 @@ const ResumeAnalysis = () => {
           result.name +
           result.relevance
       );
-   
 
       if (resumeData) {
         dispatch(

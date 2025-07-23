@@ -16,17 +16,29 @@ import {
   Dashboard,
   People,
   Feedback,
+  Logout
 } from '@mui/icons-material';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 // Update the import path below if your store file is located elsewhere, e.g. '../../store' or '../../app/store'
 import type { RootState } from '../../store';
 // Update the path below to the correct location of authenticationSlice in your project
 import { Role } from '../../redux/authenticationSlice';
+import { logout } from '../../redux/authenticationSlice';
 
 const drawerWidth = 240;
 
 const Sidebar: React.FC = () => {
+
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+  const handleOnClick = () => {
+
+  };
+
   const location = useLocation();
 
   const role = useSelector((state: RootState) => state.authentiction.role);
@@ -37,6 +49,7 @@ const Sidebar: React.FC = () => {
     { text: 'Schedule', icon: <People />, path: '/admin/schedule' },
     { text: 'Feedback', icon: <Feedback />, path: '/admin/feedback' },
     { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
+    { text: "Logout", icon: <Logout style={{ transform: 'rotate(270deg)' }}/>, path: '/'}
   ];
 
   const menuItems =
@@ -44,7 +57,7 @@ const Sidebar: React.FC = () => {
       ? allMenuItems
       : role === Role.Manager
         ? allMenuItems.filter(item =>
-            ['Dashboard','Schedule', 'Feedback'].includes(item.text)
+            ['Dashboard','Schedule', 'Feedback', 'Logout'].includes(item.text)
           )
         : [];
 
@@ -80,6 +93,7 @@ const Sidebar: React.FC = () => {
             <ListItemButton
               component={RouterLink}
               to={path}
+              onClick={(text === "Logout") ? handleLogout : handleOnClick}
               selected={location.pathname === path}
               sx={{
                 color: '#fff',

@@ -3,7 +3,8 @@ import axios from 'axios';
 import store from '../store';
 import { setEvaluation } from '../redux/interviewSlice';
 import { sendEvaluationToBackend } from './save-results';
-import { PASS_SCORE, ALERT_SUCCESS} from '../constants';
+import { PASS_SCORE } from '../constants';
+import { toast } from 'react-toastify';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // or hardcode for testing
 const GEMINI_ENDPOINT = import.meta.env.VITE_GEMINI_ENDPOINT;
@@ -122,13 +123,16 @@ export async function evaluateInterview() {
         status: result.status,
       });
       console.log('✅ Evaluation submitted successfully:', backendResponse);
-      alert('Evaluation submitted successfully!');
+
+      if (backendResponse?.message) {
+        toast.success(backendResponse.message, { position: 'top-right' });
+      }else {
+        toast.success('Evaluation submitted successfully!', { position: 'top-right' });
+    }
     } catch (err) {
       console.error('❌ Failed to submit evaluation:', err);
-      alert('Failed to submit evaluation.');
+      toast.error('Failed to submit evaluation. Please try again.', { position: 'top-right' });
     }
-
-    alert(ALERT_SUCCESS);
 
     return result;
   } catch (err) {

@@ -121,14 +121,20 @@ export async function evaluateInterview() {
         feedback: result.feedback,
         status: result.status,
       });
-      console.log('✅ Evaluation submitted successfully:', backendResponse);
-      alert('Evaluation submitted successfully!');
+      if(backendResponse.ok){
+        console.log('✅ Evaluation submitted successfully:', backendResponse);
+        alert('Evaluation submitted successfully!');
+      }
+      else{
+        throw new Error();
+      }
+      
     } catch (err) {
       console.error('❌ Failed to submit evaluation:', err);
       alert('Failed to submit evaluation.');
     }
 
-    alert(ALERT_SUCCESS);
+    // alert(ALERT_SUCCESS);
 
     return result;
   } catch (err) {

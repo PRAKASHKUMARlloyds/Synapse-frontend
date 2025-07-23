@@ -1,19 +1,10 @@
 import { useState } from 'react';
-import {
-  Container,
-  Typography,
-  Paper,
-  Box,
-  Divider,
-  IconButton,
-  Button,
-} from '@mui/material';
+import { Container, Typography, Paper, Box, Divider, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store.ts';
-import { setCandidateData } from '../redux/resumeAnalysisSlice.tsx';
 
 import { TechStackSelector } from '../components/resumeComponents/TechStackSelector';
 import { ResumeUploader } from '../components/resumeComponents/ResumeUploader';
@@ -24,6 +15,14 @@ import { AnalyzeActions } from '../components/resumeComponents/AnalyzeActions';
 import { LoadingIndicator } from '../components/resumeComponents/LoadingIndicator';
 import { SingleResultDisplay } from '../components/resumeComponents/SingleResultDisplay';
 import { BulkResultDisplay } from '../components/resumeComponents/BulkResultDisplay';
+
+import {
+  setSkills,
+  setResumeScore,
+  setStatus,
+  setCandidateData,
+} from '../redux/resumeAnalysisSlice.tsx';
+import { addInterview } from '../redux/interviewScheduleSlice.tsx';
 
 const loadingMessages = [
   '🚀 Launching resume into orbit...',
@@ -107,6 +106,16 @@ const ResumeAnalysis = () => {
             status: result.relevance > 80 ? 'Rejected' : 'Passed',
           })
         );
+
+        dispatch(
+          addInterview({
+            id: 7,
+            candidate: name,
+            position: 'Software Engineer',
+            date: '',
+            experience: '2 years',
+          })
+        );
       }
       setSingleResult(result);
     } else if (activeTab === 'bulk' && bulkFiles) {
@@ -160,11 +169,7 @@ const ResumeAnalysis = () => {
           <UploadModeTab activeTab={activeTab} setActiveTab={setActiveTab} />
         </Box>
 
-        <UploadedFilesPreview
-          activeTab={activeTab}
-          singleFile={singleFile}
-          bulkFiles={bulkFiles}
-        />
+        <UploadedFilesPreview activeTab={activeTab} singleFile={singleFile} bulkFiles={bulkFiles} />
 
         <AnalyzeActions
           canAnalyze={Boolean(canAnalyze)}
@@ -173,9 +178,7 @@ const ResumeAnalysis = () => {
           activeTab={activeTab}
         />
 
-        {isLoading && (
-          <LoadingIndicator message={loadingMessages[loadingMessageIndex]} />
-        )}
+        {isLoading && <LoadingIndicator message={loadingMessages[loadingMessageIndex]} />}
 
         {!isLoading && activeTab === 'single' && singleResult && (
           <SingleResultDisplay result={singleResult} selectedStacks={selectedStacks} />

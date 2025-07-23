@@ -12,11 +12,7 @@ import {
   Divider,
   Box,
 } from '@mui/material';
-import {
-  Dashboard,
-  People,
-  Feedback,
-} from '@mui/icons-material';
+import { Dashboard, People, Feedback } from '@mui/icons-material';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 // Update the import path below if your store file is located elsewhere, e.g. '../../store' or '../../app/store'
@@ -34,18 +30,16 @@ const Sidebar: React.FC = () => {
 
   const allMenuItems = [
     { text: 'Dashboard', icon: <Dashboard />, path: '/admin/dashboard' },
+    { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
     { text: 'Schedule', icon: <People />, path: '/admin/schedule' },
     { text: 'Feedback', icon: <Feedback />, path: '/admin/feedback' },
-    { text: 'Candidates', icon: <People />, path: '/admin/candidates' },
   ];
 
   const menuItems =
     role === Role.HR
       ? allMenuItems
       : role === Role.Manager
-        ? allMenuItems.filter(item =>
-            ['Dashboard','Schedule', 'Feedback'].includes(item.text)
-          )
+        ? allMenuItems.filter((item) => ['Dashboard', 'Schedule', 'Feedback'].includes(item.text))
         : [];
 
   return (

@@ -89,8 +89,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ onSubmit }) => {
             <ConsoleComp
               output={output}
               minimize={!consoleVisible}
-              changeMinimize={(val) => setConsoleVisible(!val)}
-            />
+              changeMinimize={(val) => setConsoleVisible(!val)} consolePanelRef={null}            />
           )}
         </Panel>
       </PanelGroup>

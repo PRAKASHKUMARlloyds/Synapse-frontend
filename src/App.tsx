@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { RoutesList } from '../src/components/app/RouteList'; // adjust path as needed
 import './App.css';

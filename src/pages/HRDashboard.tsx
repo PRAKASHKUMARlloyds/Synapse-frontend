@@ -9,22 +9,12 @@ import {
   DialogContent,
   TextField,
   DialogActions,
-  IconButton,
   Paper
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store';
-import { setDescription, setOnBoardingDetails } from '../redux/candidateDataSlice';
-import Skills from '../components/customComponents/Skills';
+import { setDescription } from '../redux/candidateDataSlice';
 import FileUpload from '../components/fileupload/FileUpload';
-
-const contentArray = [
-  { title: 'HR Policies', text: 'Details about HR policies and procedures.' },
-  { title: 'Employee Benefits', text: 'Information on health, retirement, and perks.' },
-  { title: 'Leave Tracker', text: 'Check your leave balance and request time off.' },
-  { title: 'Performance Reviews', text: 'Guidelines and feedback for career growth.' },
-];
 
 export default function HRDashboard() {
   const [open, setOpen] = useState(false);
@@ -36,10 +26,6 @@ export default function HRDashboard() {
   const onBoardingDetails = useSelector((state: RootState) => state.candidateData.onBoardingDetails);
   const fileName = useSelector((state: RootState) => state.candidateData.onBoardingDetails.fileName);
   const description = useSelector((state: RootState) => state.candidateData.onBoardingDetails.description || '');
-
-  const handleSkillsChange = (selectedOptions: readonly string[]) => {
-  dispatch(setOnBoardingDetails({ ...onBoardingDetails, skills: [...selectedOptions] }));
-};
 
   const submitHandler = () => {
     console.log('data', onBoardingDetails, fileName, description);

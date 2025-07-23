@@ -7,7 +7,6 @@ import {
   Paper,
   Divider,
   Fade,
-  CircularProgress,
 } from '@mui/material';
 import ChatInterface from '../pages/ChatInterface';
 import { AiInterviewPage } from './AiInterviewPage';
@@ -23,13 +22,11 @@ export default function UserDashboard() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isInterviewLoading, setIsInterviewLoading] = useState(false);
   const [imageReady, setImageReady] = useState(false);
-  const [showTranscription, setShowTranscription] = useState(false);
 
   const {
     streamVideoRef,
     connect,
     startTextStream,
-    destroy,
     status,
     isStreamReady,
     streamEvent,

@@ -34,10 +34,12 @@ export function useStreamingClient() {
 
   const [DID_API, setDID_API] = useState<ApiConfig | null>(null);
   const [peerConnection, setPeerConnection] = useState<RTCPeerConnection | null>(null);
-  const [pcDataChannel, setPcDataChannel] = useState<RTCDataChannel | null>(null);
+   
+  const [, setPcDataChannel] = useState<RTCDataChannel | null>(null);
   const [streamId, setStreamId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [sessionClientAnswer, setSessionClientAnswer] = useState<RTCSessionDescriptionInit | null>(null);
+   
+  const [, setSessionClientAnswer] = useState<RTCSessionDescriptionInit | null>(null);
   const [isStreamReady, setIsStreamReady] = useState(false);
 
   let statsIntervalId: ReturnType<typeof setInterval> | null = null;
@@ -206,14 +208,14 @@ export function useStreamingClient() {
     }
   }
 
-  function playIdleVideo() {
-    if (idleVideoRef.current) {
-      idleVideoRef.current.src =
-        DID_API?.service === 'clips'
-          ? 'alex_v2_idle.mp4'
-          : 'emma_idle.mp4';
-    }
-  }
+  // function playIdleVideo() {
+  //   if (idleVideoRef.current) {
+  //     idleVideoRef.current.src =
+  //       DID_API?.service === 'clips'
+  //         ? 'alex_v2_idle.mp4'
+  //         : 'emma_idle.mp4';
+  //   }
+  // }
 
   const presenterInputByService: PresenterInput = {
     talks: {

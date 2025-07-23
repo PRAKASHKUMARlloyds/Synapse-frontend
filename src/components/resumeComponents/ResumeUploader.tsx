@@ -31,7 +31,7 @@ export const ResumeUploader = ({ onUpload, mode }: ResumeUploaderProps) => {
           },
         }}
       >
-        {mode === 'single' ? '' : 'Upload Resumes'}
+        {mode === 'single' ? 'Upload Resume' : 'Upload Resumes'}
         <input
           type="file"
           hidden

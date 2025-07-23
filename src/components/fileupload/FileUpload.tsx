@@ -5,14 +5,13 @@ import { useDropzone } from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 
 import './FileUpload.css'; // Import the CSS file
-import React from 'react';
 import { setFileName } from '../../redux/candidateDataSlice';
 import type { RootState } from '../../store';
 
 export default function FileUpload() {
   const dispatch = useDispatch();
   const fileName = useSelector((state: RootState) => state.candidateData.onBoardingDetails.fileName);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const onDrop = useCallback((acceptedFiles: Array<File>) => {
@@ -23,7 +22,7 @@ export default function FileUpload() {
     }
   }, [dispatch]);
 
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
     accept: {
@@ -40,32 +39,32 @@ export default function FileUpload() {
     setError(null); // Reset error state
   };
 
-  async function handleOnSubmit(e: React.SyntheticEvent) {
-    e.preventDefault();
+  // async function handleOnSubmit(e: React.SyntheticEvent) {
+  //   e.preventDefault();
 
-    if (typeof acceptedFiles[0] === 'undefined') return;
+  //   if (typeof acceptedFiles[0] === 'undefined') return;
 
-    setLoading(true);
-    setError(null);
+  //   setLoading(true);
+  //   setError(null);
 
-    const formData = new FormData();
-    formData.append('file', acceptedFiles[0]);
-    formData.append('upload_preset', '<Your Upload Preset>');
-    formData.append('api_key', import.meta.env.VITE_CLOUDINARY_API_KEY);
+  //   const formData = new FormData();
+  //   formData.append('file', acceptedFiles[0]);
+  //   formData.append('upload_preset', '<Your Upload Preset>');
+  //   formData.append('api_key', import.meta.env.VITE_CLOUDINARY_API_KEY);
 
-    try {
-      const results = await fetch('https://api.cloudinary.com/v1_1/<Your Cloud Name>/image/upload', {
-        method: 'POST',
-        body: formData,
-      }).then((r) => r.json());
+  //   try {
+  //     const results = await fetch('https://api.cloudinary.com/v1_1/<Your Cloud Name>/image/upload', {
+  //       method: 'POST',
+  //       body: formData,
+  //     }).then((r) => r.json());
 
-      console.log('results', results);
-    } catch (err) {
-      setError('File upload failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }
+  //     console.log('results', results);
+  //   } catch (err) {
+  //     setError('File upload failed. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   return (
     <>

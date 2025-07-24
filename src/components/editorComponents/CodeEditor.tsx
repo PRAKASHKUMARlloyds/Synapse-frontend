@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import Editor from "@monaco-editor/react";
 import EditorNav from "./EditorNav";
@@ -52,6 +52,26 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ onSubmit }) => {
     console.log = originalLog;
     setConsoleVisible(true);
   };
+
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent): void => {
+      e.preventDefault();
+    };
+
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.ctrlKey || e.altKey) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <Box sx={{ height: "70vh", width: "100%" }}>

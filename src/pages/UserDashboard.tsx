@@ -89,6 +89,26 @@ export default function UserDashboard() {
     }
   }, [status.streaming]);
 
+   useEffect(() => {
+    const handleContextMenu = (e: MouseEvent): void => {
+      e.preventDefault();
+    };
+
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.ctrlKey || e.altKey) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const handleCodeSubmit = (code: string) => {
     const responseTime = Date.now() - questionReceivedAt;
     console.log(`⏱️ Response Time: ${responseTime}ms`);

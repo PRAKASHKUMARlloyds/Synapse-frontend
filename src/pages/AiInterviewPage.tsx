@@ -18,6 +18,18 @@ import jsQuestions from '../data/question_answer/js.json';
 import nodejsQuestions from '../data/question_answer/nodejs.json';
 import jsCodingQuestions from '../data/question_answer/js_coding.json';
 
+const useMicrophonePermission = () => {
+  const [permission, setPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
+
+  useEffect(() => {
+    navigator.permissions?.query({ name: 'microphone' as PermissionName })
+      .then((result) => setPermission(result.state as 'granted' | 'denied' | 'prompt'))
+      .catch(() => setPermission('prompt'));
+  }, []);
+
+  return permission;
+};
+
 type Question = {
   id?: number;
   question: string;
@@ -48,9 +60,10 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   const [silentTimer, setSilentTimer] = useState<NodeJS.Timeout | null>(null);
   const [codingTimer, setCodingTimer] = useState<NodeJS.Timeout | null>(null);
   const [interviewComplete, setInterviewComplete] = useState(false);
-  const [showTranscription, setShowTranscription] = useState(true); // Default ON
+  const [showTranscription, setShowTranscription] = useState(true);
   const [questionTranscription, setQuestionTranscriptionState] = useState('');
 
+  const microphonePermission = useMicrophonePermission();
   const { speak } = useSpeechSynthesizer();
   const {
     transcript,
@@ -61,14 +74,12 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
     stopListening,
   } = useAudioToText();
 
-   const userEmail = useSelector((state: any) => state.authentiction.user?.email);
-
-   const randomQuestions = useRandomQuestions(
+  const userEmail = useSelector((state: any) => state.authentiction.user?.email);
+  const randomQuestions = useRandomQuestions(
     reactQuestions,
     jsQuestions,
     nodejsQuestions
   );
-
   const interviewQuestions = [...randomQuestions, jsCodingQuestions.js_coding[0]];
   const smallTalks = [
     'Hi! Good Morning. How are you today?',
@@ -76,9 +87,9 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   ];
 
   useEffect(() => {
-    if (interviewComplete){
-       dispatch(setCandidateEmail(userEmail));
-       evaluateInterview();
+    if (interviewComplete) {
+      dispatch(setCandidateEmail(userEmail));
+      evaluateInterview();
     }
   }, [interviewComplete]);
 
@@ -96,20 +107,16 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
   useEffect(() => {
     if (!started || !imageReady) return;
 
-    // When a new question is asked, update the question transcription
     const runInteraction = (text: string) => {
-      // Trigger lipsync and transcription immediately
       setQuestionTranscriptionState(text);
       onReadQuestion?.(text);
-
-      // Delay only the voice (speak) so lipsync and voice start together
       setTimeout(() => {
         speak(text, () => {
           resetTranscript();
           startListening();
           isCodingQuestion() ? startCodingTimer() : resetSilentTimer();
         });
-      }, 1000); // Delay voice by 1 second (adjust as needed)
+      }, 1000);
     };
 
     if (phase === 'smalltalk') {
@@ -180,12 +187,12 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
 
   const isCodingQuestion = () => currentIndex === interviewQuestions.length - 1;
 
-  if (!browserSupportsSpeechRecognition) {
+  if (!browserSupportsSpeechRecognition || microphonePermission === 'denied') {
     return (
       <Card sx={{ mt: 3 }}>
         <CardContent>
           <Typography color="error">
-            Your browser doesn’t support speech recognition.
+            Your browser doesn’t support speech recognition or microphone access is denied.
           </Typography>
         </CardContent>
       </Card>
@@ -205,25 +212,22 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
       }}
     >
       <CardContent>
-        {/* Centered Title */}
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h5" fontWeight={700} gutterBottom>
             🧠 AI Interview Assistant
           </Typography>
         </Box>
 
-        {/* Buttons row: left and right alignment, closer together */}
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: 2, // Add gap between buttons
+            gap: 2,
             mb: 3,
             flexWrap: 'wrap',
           }}
         >
-          {/* Start Interview Button */}
           <Button
             variant="contained"
             disabled={started || loading}
@@ -257,27 +261,18 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
             {loading ? 'Connecting...' : 'Start Interview'}
           </Button>
 
-          {/* Transcription Toggle or Coding Info Button */}
           {isCodingQuestion() && !interviewComplete ? (
             <Button
               variant="outlined"
-              sx={{
-                fontWeight: 600,
-                borderRadius: 2,
-                minWidth: 160,
-              }}
+              sx={{ fontWeight: 600, borderRadius: 2, minWidth: 160 }}
               disabled
             >
               Hide Answer Transcription
             </Button>
           ) : (
             <Button
-              variant={showTranscription ? "outlined" : "contained"}
-              sx={{
-                fontWeight: 600,
-                borderRadius: 2,
-                minWidth: 160,
-              }}
+              variant={showTranscription ? 'outlined' : 'contained'}
+              sx={{ fontWeight: 600, borderRadius: 2, minWidth: 160 }}
               onClick={() => setShowTranscription((prev) => !prev)}
               disabled={interviewComplete}
             >
@@ -286,7 +281,6 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
           )}
         </Box>
 
-        {/* Interview content */}
         {!started ? (
           <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
             Click "Start Interview" to begin your AI-powered interview session.
@@ -309,7 +303,6 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
               </Typography>
             )}
 
-            {/* Show transcription only if interview is not complete and not coding question */}
             {showTranscription && !interviewComplete && (
               <Box sx={{ mt: 2, mb: 2 }}>
                 <Typography variant="subtitle2" fontWeight="bold">
@@ -326,9 +319,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
                     Please open the code editor and submit your code answer.
                   </Typography>
                 ) : (
-                  <Typography variant="body2">
-                    {transcript}
-                  </Typography>
+                  <Typography variant="body2">{transcript}</Typography>
                 )}
               </Box>
             )}

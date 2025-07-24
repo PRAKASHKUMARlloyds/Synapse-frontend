@@ -1,37 +1,58 @@
-import { useSpeechRecognition } from 'react-speech-recognition';
-import SpeechRecognition from 'react-speech-recognition';
-interface AudioToTextHook {
-  transcript: string;
-  listening: boolean;
-  resetTranscript: () => void;
-  browserSupportsSpeechRecognition: boolean;
-  startListening: () => void;
-  stopListening: () => void;
-}
+// useAudioToText.ts
+import { useState, useEffect, useRef } from 'react';
 
-const useAudioToText = (): AudioToTextHook => {
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+const useAudioToText = () => {
+  const [transcript, setTranscript] = useState('');
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = (event) => {
+      const result = Array.from(event.results)
+        .map((r) => r[0].transcript)
+        .join('');
+      setTranscript(result);
+    };
+
+    recognition.onerror = (e) => console.error('Speech recognition error', e);
+
+    recognitionRef.current = recognition;
+  }, []);
 
   const startListening = () => {
-    SpeechRecognition.startListening({ continuous: true, language: 'en-US', interimResults: true });
+    if (recognitionRef.current && !listening) {
+      recognitionRef.current.start();
+      setListening(true);
+    }
   };
 
   const stopListening = () => {
-    SpeechRecognition.stopListening();
+    if (recognitionRef.current && listening) {
+      recognitionRef.current.stop();
+      setListening(false);
+    }
   };
+
+  const resetTranscript = () => setTranscript('');
+
+  const browserSupportsSpeechRecognition =
+    !!window.SpeechRecognition || !!(window as any).webkitSpeechRecognition;
 
   return {
     transcript,
     listening,
     resetTranscript,
-    browserSupportsSpeechRecognition,
     startListening,
     stopListening,
+    browserSupportsSpeechRecognition,
   };
 };
 

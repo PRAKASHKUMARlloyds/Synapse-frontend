@@ -18,7 +18,6 @@ import { useSelector, useDispatch } from 'react-redux';
 // Update the import path below if your store file is located elsewhere, e.g. '../../store' or '../../app/store'
 import type { RootState } from '../../store';
 // Update the path below to the correct location of authenticationSlice in your project
-import { Role } from '../../redux/authenticationSlice';
 import { logout } from '../../redux/authenticationSlice';
 
 const drawerWidth = 240;
@@ -33,7 +32,6 @@ const Sidebar: React.FC = () => {
 
   const location = useLocation();
 
-  const role = useSelector((state: RootState) => state.authentiction.role);
   const loggedInUser = useSelector((state: RootState) => state.authentiction.user);
 
   const allMenuItems = [
@@ -44,14 +42,14 @@ const Sidebar: React.FC = () => {
     { text: 'Logout', icon: <Logout style={{ transform: 'rotate(270deg)' }} />, path: '/' },
   ];
 
-  const menuItems =
-    role === Role.HR
-      ? allMenuItems
-      : role === Role.Manager
-        ? allMenuItems.filter((item) =>
-            ['Dashboard', 'Schedule', 'Feedback', 'Logout'].includes(item.text)
-          )
-        : [];
+  // const menuItems =
+  //   role === Role.HR
+  //     ? allMenuItems
+  //     : role === Role.Manager
+  //       ? allMenuItems.filter((item) =>
+  //           ['Dashboard', 'Schedule', 'Feedback', 'Logout'].includes(item.text)
+  //         )
+  //       : [];
 
   return (
     <Drawer

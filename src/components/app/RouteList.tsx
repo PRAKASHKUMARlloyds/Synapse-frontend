@@ -11,7 +11,7 @@ import AdminLayout from '../../pages/admin/AdminLayout';
 import LoginPage from '../../pages/LoginPage';
 import UserDashboard from '../../pages/UserDashboard';
 import HRDashboard from '../../pages/HRDashboard';
-import ResumeAnalysis from '../../pages/ResumeAnalysis'
+import ResumeAnalysis from '../../pages/ResumeAnalysis';
 
 export const RoutesList = () => {
   return (
@@ -20,7 +20,7 @@ export const RoutesList = () => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/hr-dashboard" element={<HRDashboard />} />
-        <Route path="/analyse" element={<ResumeAnalysis />} />
+        {/* <Route path="/analyse" element={<ResumeAnalysis />} /> */}
         <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         <Route path="/ChatInterface" element={<ChatInterface />} />
         <Route path="/admin" element={<AdminLayout />}>

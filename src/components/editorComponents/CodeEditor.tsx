@@ -18,6 +18,7 @@ interface CodeEditorProps {
 
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ onSubmit }) => {
+  // Made a change
   const [codeValue, setCodeValue] = useState("// Start coding here");
   const [tech, setTech] = useState("javascript");
   const [theme, setTheme] = useState("vs-dark");

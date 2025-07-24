@@ -214,7 +214,7 @@ export const AiInterviewPage: React.FC<AiInterviewPageProps> = ({
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
           <Typography variant="h5" fontWeight={700} gutterBottom>
-            🧠 AI Interview Assistant
+            🧠 Experience the AI Interview
           </Typography>
         </Box>
 

@@ -1,10 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -24,9 +19,7 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const storedRole = useSelector(
-    (state: RootState) => state.authentiction.role
-  );
+  const storedRole = useSelector((state: RootState) => state.authentiction.role);
 
   const handleLogin = () => {
     const emailError = getEmailValidationMessage(email);
@@ -47,13 +40,13 @@ export const Login = () => {
     }
 
     toast.success('Login successful 🎉');
-
+    localStorage.setItem('user', matchedUser.name);
     dispatch(
       login({
         email: matchedUser.email,
         password: matchedUser.password,
         role: matchedUser.role.toLowerCase() as Role,
-        name: matchedUser.name, 
+        name: matchedUser.name,
       })
     );
   };
@@ -89,18 +82,28 @@ export const Login = () => {
         zIndex: 10,
       }}
     >
-      <Box sx={{ maxWidth: 320, width: '100%', p: 3, bgcolor: '#fff', borderRadius: 2, boxShadow: 3, textAlign: 'center' }}>
+      <Box
+        sx={{
+          maxWidth: 320,
+          width: '100%',
+          p: 3,
+          bgcolor: '#fff',
+          borderRadius: 2,
+          boxShadow: 3,
+          textAlign: 'center',
+        }}
+      >
         <img
           src="https://play-lh.googleusercontent.com/y21EHperEeE9F8Ic147ZZSNE3icefFnAzWUvsEr3jHdnVmpnfBjsu1ARVcRLu8f1QYNi=w240-h480-rw"
           alt="Login Illustration"
           style={{ width: 100, height: 100, marginBottom: 8 }}
         />
 
-       <div>
-        <AccountCircle sx={{ fontSize: 60, color: 'primary.main' }} />
-        <Typography variant="h5" sx={{ mt: 1, mb: 2 }}>
-          Login
-        </Typography>
+        <div>
+          <AccountCircle sx={{ fontSize: 60, color: 'primary.main' }} />
+          <Typography variant="h5" sx={{ mt: 1, mb: 2 }}>
+            Login
+          </Typography>
         </div>
 
         <TextField
@@ -122,12 +125,7 @@ export const Login = () => {
           }}
         />
 
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ mt: 2 }}
-          onClick={handleLogin}
-        >
+        <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handleLogin}>
           Login
         </Button>
 

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import Editor from "@monaco-editor/react";
 import EditorNav from "./EditorNav";
 import ConsoleComp from "./Console";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
+import type{ImperativePanelHandle} from "react-resizable-panels";
 
 interface Output {
   logs: string[];
@@ -22,6 +23,19 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ onSubmit }) => {
   const [theme, setTheme] = useState("vs-dark");
   const [output, setOutput] = useState<Output>({ logs: [], result: "", error: "" });
   const [consoleVisible, setConsoleVisible] = useState(false);
+
+  const consolePanelRef = useRef<ImperativePanelHandle>(null);
+
+  useEffect(() => {
+    if(consolePanelRef.current){
+      if(consoleVisible){
+        consolePanelRef.current.expand();
+      }
+      else{
+        consolePanelRef.current.collapse();
+      }
+    }
+  }, [consoleVisible]);
 
   const handleCodeSubmit = () => {
     onSubmit(codeValue);
@@ -104,7 +118,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ onSubmit }) => {
 
         <PanelResizeHandle style={{ height: "6px", background: "#ccc", cursor: "row-resize" }} />
 
-        <Panel defaultSize={20}>
+        <Panel defaultSize={20} ref={consolePanelRef} collapsible={true} collapsedSize={0}>
           {consoleVisible && (
             <ConsoleComp
               output={output}

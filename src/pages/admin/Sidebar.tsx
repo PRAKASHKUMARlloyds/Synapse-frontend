@@ -33,6 +33,7 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   const loggedInUser = useSelector((state: RootState) => state.authentiction.user);
+  const userName = localStorage.getItem('user');
 
   const allMenuItems = [
     { text: 'Dashboard', icon: <Dashboard />, path: '/admin/dashboard' },
@@ -71,7 +72,7 @@ const Sidebar: React.FC = () => {
           {loggedInUser?.name?.charAt(0) ?? 'U'}
         </Avatar>
         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-          {loggedInUser?.name ?? 'User'}
+          {userName ?? 'User'}
         </Typography>
       </Box>
 

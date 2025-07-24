@@ -80,7 +80,7 @@ const Sidebar: React.FC = () => {
       <Divider sx={{ borderColor: '#ffffff33', mx: 2, mb: 1 }} />
 
       <List>
-        {menuItems.map(({ text, icon, path }) => (
+        {allMenuItems.map(({ text, icon, path }) => (
           <ListItem key={text} disablePadding>
             <ListItemButton
               component={RouterLink}

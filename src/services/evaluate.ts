@@ -134,6 +134,7 @@ export async function evaluateInterview() {
       toast.error('Failed to submit evaluation. Please try again.', { position: 'top-right' });
     }
 
+
     return result;
   } catch (err) {
     console.error('[Evaluate] Error during evaluation', err);

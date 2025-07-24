@@ -4,30 +4,35 @@ FROM node:22.17.1-alpine AS build
 # Set working directory
 WORKDIR /app
 
-# Copy package files & install dependencies
+# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the code
+# Copy rest of the source code
 COPY . .
 
-# Build the production-ready static files
+# Build React app
 RUN npm run build
 
-# Step 2: Serve with a lightweight web server
-FROM nginx:alpine
+# Step 2: Use a lightweight Node.js server to serve the static files
+FROM node:22.17.1-alpine
 
-# Remove default NGINX website
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 
-# Copy built files from previous stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Install a simple HTTP server
+RUN npm install -g serve
 
-# Copy custom NGINX config (optional)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Copy the build output from previous stage
+COPY --from=build /app/dist ./dist
+
+# Set environment variable (optional but good for debugging)
+ENV NODE_ENV=production
+
+# Set default port for Cloud Run
+ENV PORT=5173
 
 # Expose port
-EXPOSE 80
+EXPOSE 5173
 
-# Start NGINX
-CMD ["nginx", "-g", "daemon off;"]
+# Serve the static files from the build folder
+CMD ["serve", "-s", "dist", "-l", "5173"]

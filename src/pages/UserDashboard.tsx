@@ -103,7 +103,7 @@ export default function UserDashboard() {
     <Box sx={{ height: '100vh', bgcolor: '#f2f6fc', overflowY: 'auto' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Typography variant="h4" fontWeight={600} gutterBottom>
-          🎯 AI Interview Interface
+          🎯 Synapse Select
         </Typography>
         <Divider sx={{ my: 3 }} />
 
